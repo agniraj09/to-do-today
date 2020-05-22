@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pure_white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".activities.AddNewTaskActivity">
+
+    <CheckBox
+        android:id="@+id/auto_delete_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/priority_group"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:checked="true"
+        android:text="@string/auto_delete_by_eod" />
+
+    <CheckBox
+        android:id="@+id/need_reminder_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/auto_delete_value"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:text="@string/need_reminder" />
+
+    <EditText
+        android:id="@+id/task_description_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/task_description_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:background="@drawable/ic_edittext_view"
+        android:ems="15"
+        android:gravity="start"
+        android:hint="@string/task_description_sample"
+        android:inputType="textMultiLine"
+        android:maxLength="70"
+        android:minLines="2"
+        android:nextFocusLeft="@id/task_description_value"
+        android:nextFocusUp="@id/task_description_value"
+        android:padding="13dp"
+        android:scrollbars="vertical"
+        android:textAlignment="viewStart"
+        android:textSize="17sp"
+        android:textColor="@color/pure_black" />
+
+    <RadioGroup
+        android:id="@+id/priority_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/priority_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:checkedButton="@+id/low"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/low"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:buttonTint="@color/low"
+            android:gravity="center"
+            android:text="@string/low"
+            android:textColor="@color/low" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/medium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:buttonTint="@color/medium"
+            android:gravity="center"
+            android:text="@string/medium"
+            android:textColor="@color/medium" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/high"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:buttonTint="@color/high"
+            android:gravity="center"
+            android:text="@string/high"
+            android:textColor="@color/high" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/task_description_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/label_color"
+        android:textStyle="bold"
+        android:text="@string/task_description" />
+
+    <TextView
+        android:id="@+id/priority_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/task_description_value"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/label_color"
+        android:textStyle="bold"
+        android:text="@string/priority" />
+
+    <TextView
+        android:id="@+id/reminder_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/need_reminder_value"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:text="@string/reminder_time_sample" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/reminder_time"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/green"
+        android:text="@string/add_task"
+        android:onClick="addTaskToDatabase"
+        android:textColor="@color/pure_white" />
+
+
+</RelativeLayout>

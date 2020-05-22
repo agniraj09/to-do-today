@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">To Do Today</string>
+    <string name="ad_unit_id">Dummy</string>
+
+    <string name="task_description">Task Description</string>
+    <string name="task_description_sample">Book tatkal ticket at 11 A.M.</string>
+    <string name="task_description_dummy">This is a task.</string>
+    <string name="priority">Priority</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+    <string name="reminder_time_sample">88:88 a.m.</string>
+
+    <string name="auto_delete_by_eod">Auto delete by end of the day</string>
+    <string name="need_reminder">Need Reminder</string>
+
+    <string name="add_task">Add Task</string>
+</resources>
