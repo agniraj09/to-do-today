@@ -3,6 +3,7 @@ package com.arc.agni.todotoday.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.arc.agni.todotoday.activities.HomeScreenActivity;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -45,6 +47,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         ImageView markTaskCompleted;
         ImageView editTask;
         ImageView deleteTask;
+        ImageView permanentDoneIcon;
 
         MyViewHolder(View view) {
             super(view);
@@ -56,6 +59,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             markTaskCompleted = view.findViewById(R.id.done_task);
             editTask = view.findViewById(R.id.edit_task);
             deleteTask = view.findViewById(R.id.delete_task);
+            permanentDoneIcon = view.findViewById(R.id.perm_done_mark);
         }
 
     }
@@ -66,9 +70,30 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         setHasStableIds(true);
     }
 
-    public void refreshTaskList(List<Task> tasks) {
-        this.tasks = tasks;
-        notifyDataSetChanged();
+    public void restoreItem(Context context, Task item, int position) {
+        TaskHelper.addTaskToDataBase(context, item);
+        tasks.add(position, item);
+        HomeScreenActivity.taskList = tasks;
+        notifyItemInserted(position);
+        notifyItemRangeChanged(position, tasks.size());
+    }
+
+    public List<Task> getData() {
+        return tasks;
+    }
+
+    public void deleteTask(int position, int taskID) {
+        TaskHelper.deleteTask(context, taskID);
+        tasks.remove(position);
+        HomeScreenActivity.taskList = tasks;
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, tasks.size());
+    }
+
+    private void markTaskCompleted(int position, int taskID) {
+        TaskHelper.markTaskCompleted(context, taskID);
+        tasks.get(position).setTaskCompleted(true);
+        HomeScreenActivity.taskList = tasks;
     }
 
     @NonNull
@@ -81,12 +106,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     @Override
     public long getItemId(int position) {
-        return position;
+        Task task = tasks.get(position);
+        return task.getId();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        Task task = tasks.get(position);
+        return task.getId();
     }
 
     @Override
@@ -111,44 +138,44 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 } else {
                     makeActionsLayoutVisible(holder);
                 }
-                holder.actionsEnabled = !holder.actionsEnabled;
             });
 
             // Mark Task related logic
             // If task is already completed, show done_mark icon and hide edit icon
             if (isTaskCompleted) {
-                holder.markTaskCompleted.setOnClickListener(null);
-                holder.markTaskCompleted.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_done_mark));
+                Log.e("istaskcom-T", ("position" + position + " / Desc - " + currentTask.getDescription()));
+                holder.permanentDoneIcon.setVisibility(View.VISIBLE);
+                holder.markTaskCompleted.setVisibility(View.GONE);
                 holder.editTask.setVisibility(View.GONE);
             } else {
+                Log.e("istaskcom-F", ("position" + position + " / Desc - " + currentTask.getDescription()));
+                holder.permanentDoneIcon.setVisibility(View.GONE);
+                holder.markTaskCompleted.setVisibility(View.VISIBLE);
+                holder.editTask.setVisibility(View.VISIBLE);
                 // When user clicks 'Mark Done' icon show the popup
-                holder.markTaskCompleted.setOnClickListener(v -> {
-                    new AlertDialog.Builder(context)
-                            .setTitle("Mark Completed")
-                            .setMessage("Nice, Have you completed the task?")
-                            .setNegativeButton("No", null)
-                            .setPositiveButton("Yes", (arg0, arg1) -> {
-                                TaskHelper.markTaskCompleted(context, currentTask.getId());
-                                holder.markTaskCompleted.setOnClickListener(null);
-                                holder.markTaskCompleted.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_done_mark));
-                                holder.editTask.setVisibility(View.GONE);
-                            }).create().show();
-                    ;
-                });
+                holder.markTaskCompleted.setOnClickListener(v -> new AlertDialog.Builder(context)
+                        .setTitle("Mark Completed")
+                        .setMessage("Nice, Have you completed the task?")
+                        .setNegativeButton("No", null)
+                        .setPositiveButton("Yes", (arg0, arg1) -> {
+                            markTaskCompleted(position, currentTask.getId());
+                            holder.permanentDoneIcon.setVisibility(View.VISIBLE);
+                            holder.markTaskCompleted.setVisibility(View.GONE);
+                            holder.editTask.setVisibility(View.GONE);
+                            makeActionsLayoutInvisibleAgain(holder, context.getResources().getColor(R.color.pure_white));
+                        }).create().show());
             }
 
             // Delete task related logic
             // When user clicks 'Delete task' icon
-            holder.deleteTask.setOnClickListener(v -> {
-                new AlertDialog.Builder(context)
-                        .setTitle("Delete task")
-                        .setMessage("Are you sure want to delete the task?")
-                        .setNegativeButton("No", null)
-                        .setPositiveButton("Yes", (arg0, arg1) -> {
-                            new HomeScreenActivity().deleteTask(context, currentTask.getId());
-                            holder.actions.setVisibility(View.VISIBLE);
-                        }).create().show();
-            });
+            holder.deleteTask.setOnClickListener(v -> new AlertDialog.Builder(context)
+                    .setTitle("Delete task")
+                    .setMessage("Are you sure want to delete the task?")
+                    .setNegativeButton("No", null)
+                    .setPositiveButton("Yes", (arg0, arg1) -> {
+                        makeActionsLayoutInvisibleAgain(holder, context.getResources().getColor(R.color.pure_white));
+                        deleteTask(position, currentTask.getId());
+                    }).create().show());
 
             // Edit task related logic
             holder.editTask.setOnClickListener(v -> {
@@ -161,7 +188,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     }
 
-    public void makeActionsLayoutVisible(MyViewHolder holder) {
+    private void makeActionsLayoutVisible(MyViewHolder holder) {
         holder.actions.setVisibility(View.VISIBLE);
         holder.taskDetailLayout.setAlpha(0.7F);
         holder.taskDescriptionView.setAlpha(0.7F);
@@ -169,9 +196,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         holder.taskDescriptionView.setBackgroundColor(context.getResources().getColor(R.color.dim_description_color));
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.right_to_left_anim);
         holder.actions.startAnimation(animation);
+        holder.actionsEnabled = !holder.actionsEnabled;
     }
 
-    public void makeActionsLayoutInvisibleAgain(MyViewHolder holder, int backgroundColor) {
+    private void makeActionsLayoutInvisibleAgain(MyViewHolder holder, int backgroundColor) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.left_to_right_anim);
         holder.actions.startAnimation(animation);
         new CountDownTimer(500, 100) {
@@ -188,8 +216,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 holder.taskDescriptionView.setBackgroundColor(backgroundColor);
             }
         }.start();
+        holder.actionsEnabled = !holder.actionsEnabled;
     }
-
 
     @Override
     public int getItemCount() {

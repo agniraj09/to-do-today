@@ -2,13 +2,17 @@ package com.arc.agni.todotoday.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -43,7 +47,6 @@ public class AddNewTaskActivity extends AppCompatActivity {
     int reminderHour, reminderMinute;
     TextView reminderTimeText;
     Button addOrSaveButton;
-    String screenTitle = TITLE_ADD_TASK;
     boolean isItAnUpdateTask;
 
     int taskID;
@@ -52,6 +55,12 @@ public class AddNewTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
+
+        getSupportActionBar().hide();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(ContextCompat.getColor(AddNewTaskActivity.this, R.color.pure_white));
+        }
 
         taskDescriptionValue = findViewById(R.id.task_description_value);
         priorityGroup = findViewById(R.id.priority_group);
@@ -67,11 +76,14 @@ public class AddNewTaskActivity extends AppCompatActivity {
         if (taskID != 0) {
             isItAnUpdateTask = true;
             prePopulateDataForTaskUpdate(taskID);
-            screenTitle = TITLE_UPDATE_TASK;
+            ((TextView) findViewById(R.id.ant_title)).setText(TITLE_UPDATE_TASK);
         }
 
-        setTitle(screenTitle);
-
+        taskDescriptionValue.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
 
 /*        needReminderCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Calendar currentTime = Calendar.getInstance();
@@ -110,6 +122,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
         Intent backToHome = new Intent(this, HomeScreenActivity.class);
         backToHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(backToHome);
+    }
+
+    public void hideKeyboard(View view) {
+        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

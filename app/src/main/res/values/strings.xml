@@ -2,8 +2,10 @@
     <string name="app_name">To Do Today</string>
     <string name="ad_unit_id">Dummy</string>
 
+    <string name="title">To Do List Today</string>
+
     <string name="task_description">Task Description</string>
-    <string name="task_description_sample">Book tatkal ticket at 11 A.M.</string>
+    <string name="task_description_sample">Book Tatkal Ticket To Chennai @ 11</string>
     <string name="task_description_dummy">This is a task.</string>
     <string name="priority">Priority</string>
     <string name="high">High</string>

@@ -2,24 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homescreen_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/pure_white"
     tools:context=".activities.HomeScreenActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:text="@string/title"
+        android:textColor="@color/primary_text"
+        android:textSize="25sp"
+        android:gravity="center_horizontal" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/task_list_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/title"
         android:scrollbars="vertical" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addnewtask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:onClick="createNewTask"
         android:layout_alignParentRight="true"
+        android:onClick="createNewTask"
         android:src="@drawable/ic_add_task" />
 
 </RelativeLayout>

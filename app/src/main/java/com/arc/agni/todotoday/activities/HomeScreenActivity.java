@@ -1,36 +1,31 @@
 package com.arc.agni.todotoday.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.adapter.TaskAdapter;
-import com.arc.agni.todotoday.helper.DBHelper;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static com.arc.agni.todotoday.constants.AppConstants.TITLE_TO_DO_LIST_TODAY;
 
 public class HomeScreenActivity extends AppCompatActivity {
 
-    static List<Task> taskList = new ArrayList<>();
-    public static TaskAdapter taskAdapter;
+    public static List<Task> taskList = new ArrayList<>();
+    public TaskAdapter taskAdapter;
     public RecyclerView recyclerView;
 
     @Override
@@ -38,6 +33,12 @@ public class HomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         setTitle(TITLE_TO_DO_LIST_TODAY);
+
+        getSupportActionBar().hide();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(ContextCompat.getColor(HomeScreenActivity.this, R.color.pure_white));
+        }
 
         populateTaskList();
     }
@@ -76,14 +77,9 @@ public class HomeScreenActivity extends AppCompatActivity {
         return validTasks;
     }
 
-    public void deleteTask(Context context, int taskID) {
-        TaskHelper.deleteTask(context, taskID);
-        taskList = TaskHelper.getAllTasksFromDB(context);
-        taskAdapter.refreshTaskList(taskList);
-    }
-
     public void createNewTask(View view) {
         Intent addNewTask = new Intent(HomeScreenActivity.this, AddNewTaskActivity.class);
         startActivity(addNewTask);
     }
+
 }

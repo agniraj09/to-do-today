@@ -31,12 +31,22 @@
                     android:id="@+id/task_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4.35"
+                    android:layout_weight="4.1"
                     android:background="@color/pure_white"
                     android:hint="@string/task_description_dummy"
-                    android:padding="10dp"
+                    android:padding="5dp"
                     android:layout_gravity="center"
                     android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/perm_done_mark"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="0.4"
+                    android:layout_gravity="start|center_vertical"
+                    android:clickable="false"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_done_mark" />
 
             </LinearLayout>
 

@@ -37,6 +37,10 @@ public class TaskHelper {
         }
     }
 
+    public static void addTaskToDataBase(Context context, Task task) {
+        addTaskToDatabase(context, task.getId(), task.getDescription(), task.getPriority(), task.isAutoDeleteByEOD(), task.getDateCreated(), task.isReminderNeeded(), task.getReminderHour(), task.getReminderMinute());
+    }
+
     public static void markTaskCompleted(Context context, int taskID) {
         DBHelper dbHelper = new DBHelper(context);
         Task task = convertJsonToObject(dbHelper.getTask(taskID));
