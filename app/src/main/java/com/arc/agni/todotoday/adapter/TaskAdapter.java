@@ -143,12 +143,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             // Mark Task related logic
             // If task is already completed, show done_mark icon and hide edit icon
             if (isTaskCompleted) {
-                Log.e("istaskcom-T", ("position" + position + " / Desc - " + currentTask.getDescription()));
+                //Log.e("istaskcom-T", ("position" + position + " / Desc - " + currentTask.getDescription()));
                 holder.permanentDoneIcon.setVisibility(View.VISIBLE);
                 holder.markTaskCompleted.setVisibility(View.GONE);
                 holder.editTask.setVisibility(View.GONE);
             } else {
-                Log.e("istaskcom-F", ("position" + position + " / Desc - " + currentTask.getDescription()));
+                //Log.e("istaskcom-F", ("position" + position + " / Desc - " + currentTask.getDescription()));
                 holder.permanentDoneIcon.setVisibility(View.GONE);
                 holder.markTaskCompleted.setVisibility(View.VISIBLE);
                 holder.editTask.setVisibility(View.VISIBLE);

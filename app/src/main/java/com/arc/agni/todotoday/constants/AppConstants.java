@@ -28,4 +28,8 @@ public class AppConstants {
     public static final String QUERY_GET_ITEM = "select * from " + TASKS_TABLE_NAME + " where " + TASKS_COLUMN_ID + "=";
 
     public static final int ID_LIMIT = 9999998;
+
+    public static final String TEST_DEVICE_ID = "0EC56B91253E874AAF286CEDC3945F6A";
+    public static String ADMOB_APP_ID = "ca-app-pub-4587610802196055~5991767207";
+
 }
