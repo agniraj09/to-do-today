@@ -29,6 +29,10 @@ public class AppConstants {
 
     public static final int ID_LIMIT = 9999998;
 
+    public static final String TASK_DELETED = "Task has been deleted successfully";
+    public static final String UNDO = "Undo";
+    public static final String TASK_COMPLETED = "Task has been marked completed";
+
     public static final String TEST_DEVICE_ID = "0EC56B91253E874AAF286CEDC3945F6A";
     public static String ADMOB_APP_ID = "ca-app-pub-4587610802196055~5991767207";
 

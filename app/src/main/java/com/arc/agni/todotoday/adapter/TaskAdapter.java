@@ -3,7 +3,6 @@ package com.arc.agni.todotoday.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import com.arc.agni.todotoday.activities.HomeScreenActivity;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -71,7 +69,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     }
 
     public void restoreItem(Context context, Task item, int position) {
-        TaskHelper.addTaskToDataBase(context, item);
+        TaskHelper.addRestoredTaskToDataBase(context, item);
         tasks.add(position, item);
         HomeScreenActivity.taskList = tasks;
         notifyItemInserted(position);
@@ -90,10 +88,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         notifyItemRangeChanged(position, tasks.size());
     }
 
-    private void markTaskCompleted(int position, int taskID) {
-        TaskHelper.markTaskCompleted(context, taskID);
-        tasks.get(position).setTaskCompleted(true);
+    public void markTaskCompletionStatus(int position, int taskID, boolean status) {
+        TaskHelper.markTaskCompletionStatus(context, taskID, status);
+        tasks.get(position).setTaskCompleted(status);
         HomeScreenActivity.taskList = tasks;
+        notifyItemChanged(position);
+    }
+
+    public void refreshItem(int position) {
+        notifyItemChanged(position);
     }
 
     @NonNull
@@ -158,7 +161,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                         .setMessage("Nice, Have you completed the task?")
                         .setNegativeButton("No", null)
                         .setPositiveButton("Yes", (arg0, arg1) -> {
-                            markTaskCompleted(position, currentTask.getId());
+                            markTaskCompletionStatus(position, currentTask.getId(), true);
                             holder.permanentDoneIcon.setVisibility(View.VISIBLE);
                             holder.markTaskCompleted.setVisibility(View.GONE);
                             holder.editTask.setVisibility(View.GONE);

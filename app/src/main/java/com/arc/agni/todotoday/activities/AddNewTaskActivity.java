@@ -147,7 +147,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         if (isValidDescription(description)) {
             boolean isAutoDeleteChecked = autoDeleteCheckBox.isChecked();
             Date dateCreated = (isAutoDeleteChecked ? Calendar.getInstance().getTime() : null);
-            TaskHelper.addTaskToDatabase(this, taskID, description, priority, isAutoDeleteChecked, dateCreated, false, 0, 0);
+            TaskHelper.addTaskToDatabase(this, taskID, description, priority, isAutoDeleteChecked, dateCreated, false, 0, 0, false, false);
             Intent backToHome = new Intent(this, HomeScreenActivity.class);
             backToHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(backToHome);

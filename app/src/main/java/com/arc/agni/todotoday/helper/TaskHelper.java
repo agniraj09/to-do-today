@@ -1,12 +1,10 @@
 package com.arc.agni.todotoday.helper;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.arc.agni.todotoday.model.Task;
 import com.google.gson.Gson;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,15 +14,17 @@ import static com.arc.agni.todotoday.constants.AppConstants.ID_LIMIT;
 
 public class TaskHelper {
 
-    public static void addTaskToDatabase(Context context, int taskID, String description, String priority, boolean isAutoDeleteChecked, Date dateCreated, boolean isReminderNeeded, int reminderHour, int reminderMinute) {
+    public static void addTaskToDatabase(Context context, int taskID, String description, String priority, boolean isAutoDeleteChecked, Date dateCreated, boolean isReminderNeeded, int reminderHour, int reminderMinute, boolean isRestoredItem, boolean isTaskCompleted) {
 
         // New Task to be saved in DB
-        if (taskID == 0) {
-            // id column value- Generate Task ID using a random generator
-            taskID = (new Random().nextInt(ID_LIMIT) + 1);
+        if (taskID == 0 || isRestoredItem) {
+            if (!isRestoredItem) {
+                // id column value- Generate Task ID using a random generator
+                taskID = (new Random().nextInt(ID_LIMIT) + 1);
+            }
 
             // taskdetail column value - Json
-            Task task = new Task(taskID, description, priority, isAutoDeleteChecked, dateCreated, isReminderNeeded, reminderHour, reminderMinute, false);
+            Task task = new Task(taskID, description, priority, isAutoDeleteChecked, dateCreated, isReminderNeeded, reminderHour, reminderMinute, isTaskCompleted);
             String taskdetail = convertObjectToJson(task);
             new DBHelper(context).insertTask(taskID, taskdetail);
         }
@@ -37,14 +37,14 @@ public class TaskHelper {
         }
     }
 
-    public static void addTaskToDataBase(Context context, Task task) {
-        addTaskToDatabase(context, task.getId(), task.getDescription(), task.getPriority(), task.isAutoDeleteByEOD(), task.getDateCreated(), task.isReminderNeeded(), task.getReminderHour(), task.getReminderMinute());
+    public static void addRestoredTaskToDataBase(Context context, Task task) {
+        addTaskToDatabase(context, task.getId(), task.getDescription(), task.getPriority(), task.isAutoDeleteByEOD(), task.getDateCreated(), task.isReminderNeeded(), task.getReminderHour(), task.getReminderMinute(), true, task.isTaskCompleted());
     }
 
-    public static void markTaskCompleted(Context context, int taskID) {
+    public static void markTaskCompletionStatus(Context context, int taskID, boolean status) {
         DBHelper dbHelper = new DBHelper(context);
         Task task = convertJsonToObject(dbHelper.getTask(taskID));
-        task.setTaskCompleted(true);
+        task.setTaskCompleted(status);
         String taskdetail = convertObjectToJson(task);
         new DBHelper(context).updateTask(taskID, taskdetail);
     }
