@@ -37,6 +37,7 @@ import java.util.Date;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_HIGH;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_MEDIUM;
+import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_ADD;
 import static com.arc.agni.todotoday.constants.AppConstants.SAVE;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.TEST_DEVICE_ID;
@@ -149,6 +150,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
             Date dateCreated = (isAutoDeleteChecked ? Calendar.getInstance().getTime() : null);
             TaskHelper.addTaskToDatabase(this, taskID, description, priority, isAutoDeleteChecked, dateCreated, false, 0, 0, false, false);
             Intent backToHome = new Intent(this, HomeScreenActivity.class);
+            /*setResult(RESULT_CODE_ADD);
+            finish();*/
             backToHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(backToHome);
         }
@@ -160,19 +163,18 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent homeIntent = new Intent(this, HomeScreenActivity.class);
-        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
         if (isItAnUpdateTask) {
             new AlertDialog.Builder(this)
                     .setTitle("Discard Edit")
                     .setMessage("Do you want to discard the changes?")
                     .setNegativeButton("No", null)
                     .setPositiveButton("Yes", (arg0, arg1) -> {
+                        Intent homeIntent = new Intent(this, HomeScreenActivity.class);
+                        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(homeIntent);
                     }).create().show();
         } else {
-            startActivity(homeIntent);
+            this.finish();
         }
     }
 }

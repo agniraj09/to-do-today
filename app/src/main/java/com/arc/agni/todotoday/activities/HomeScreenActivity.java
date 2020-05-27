@@ -1,5 +1,7 @@
 package com.arc.agni.todotoday.activities;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -16,6 +18,7 @@ import com.arc.agni.todotoday.model.Task;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -24,14 +27,19 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_ADD;
+import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_UPDATE;
+import static com.arc.agni.todotoday.constants.AppConstants.RESULT_MESSAGE;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_COMPLETED;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_DELETED;
 import static com.arc.agni.todotoday.constants.AppConstants.TEST_DEVICE_ID;
@@ -42,9 +50,11 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     public static List<Task> taskList = new ArrayList<>();
     public TaskAdapter taskAdapter;
+    LinearLayoutManager layoutManager;
     public RecyclerView recyclerView;
     FloatingActionButton addNewButton;
     RelativeLayout homeScreen;
+    CardView titleCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +70,23 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         addNewButton = findViewById(R.id.addnewtask);
         homeScreen = findViewById(R.id.homescreen_layout);
+        titleCard = findViewById(R.id.hs_title_card);
         recyclerView = findViewById(R.id.task_list_recyclerview);
+        layoutManager = new LinearLayoutManager(HomeScreenActivity.this);
         populateTaskList();
         enableSwipeToDeleteAndUndo();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (layoutManager.findFirstVisibleItemPosition() > 0) {
+                    titleCard.setCardElevation(10.0F);
+                } else {
+                    titleCard.setCardElevation(0.0F);
+                }
+            }
+
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -95,7 +117,6 @@ public class HomeScreenActivity extends AppCompatActivity {
         taskList = deleteOlderTasks();
         if (taskList.size() > 0) {
             taskAdapter = new TaskAdapter(taskList, this);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(HomeScreenActivity.this);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(taskAdapter);
@@ -148,7 +169,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                 // Mark Task Completed
                 else if (direction == ItemTouchHelper.RIGHT) {
 
-                    new AlertDialog.Builder(HomeScreenActivity.this)
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this)
                             .setTitle("Mark Completed")
                             .setMessage("Nice, Have you completed the task?")
                             .setNegativeButton("No", (arg0, arg1) -> taskAdapter.refreshItem(position))
@@ -165,7 +186,14 @@ public class HomeScreenActivity extends AppCompatActivity {
                                     taskAdapter.markTaskCompletionStatus(position, currentTask.getId(), false);
                                 });
                                 snackbar.show();
-                            }).create().show();
+                            });
+
+                    Dialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.setOnCancelListener(dialog1 -> {
+                        taskAdapter.refreshItem(position);
+                    });
+                    dialog.show();
                 }
             }
         };
@@ -173,4 +201,14 @@ public class HomeScreenActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
     }
+
+
+/*    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CODE_ADD || resultCode == RESULT_CODE_UPDATE) {
+            taskAdapter.refreshAllItems();
+            Snackbar.make(homeScreen, RESULT_MESSAGE, BaseTransientBottomBar.LENGTH_SHORT).show();
+        }
+    }*/
 }

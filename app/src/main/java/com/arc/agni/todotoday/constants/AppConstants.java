@@ -15,12 +15,13 @@ public class AppConstants {
     // Intent Constants
     public static final String TASK_ID = "taskID";
 
-    public static final String SAVE= "Save";
+    public static final String SAVE = "Save";
 
     // DB Constants
     public static final String DATABASE_NAME = "arc.db";
     public static final String TASKS_TABLE_NAME = "tasks";
     public static final String TASKS_COLUMN_ID = "id";
+    public static final String TASK_COLUMN_INSERT_ID = "insertid";
     public static final String TASKS_COLUMN_TASK_DETAIL = "taskdetail";
     public static final String QUERY_SELECT_DATA = "select * from " + TASKS_TABLE_NAME;
     public static final String QUERY_CREATE_TABLE = "create table " + TASKS_TABLE_NAME + " (" + TASKS_COLUMN_ID + " integer primary key," + TASKS_COLUMN_TASK_DETAIL + " text)";
@@ -32,6 +33,11 @@ public class AppConstants {
     public static final String TASK_DELETED = "Task has been deleted successfully";
     public static final String UNDO = "Undo";
     public static final String TASK_COMPLETED = "Task has been marked completed";
+
+    public static final int RESULT_CODE_ADD = 11;
+    public static final int RESULT_CODE_UPDATE = 22;
+    public static final String RESULT_MESSAGE = "Task list updated";
+
 
     public static final String TEST_DEVICE_ID = "0EC56B91253E874AAF286CEDC3945F6A";
     public static String ADMOB_APP_ID = "ca-app-pub-4587610802196055~5991767207";
