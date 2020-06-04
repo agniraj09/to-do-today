@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
 import static com.arc.agni.todotoday.constants.AppConstants.DATABASE_NAME;
+import static com.arc.agni.todotoday.constants.AppConstants.DELETE_ALL_DATA;
 import static com.arc.agni.todotoday.constants.AppConstants.QUERY_CREATE_TABLE;
 import static com.arc.agni.todotoday.constants.AppConstants.QUERY_DROP_TALE;
 import static com.arc.agni.todotoday.constants.AppConstants.QUERY_GET_ITEM;
@@ -20,7 +21,7 @@ import static com.arc.agni.todotoday.constants.AppConstants.TASKS_TABLE_NAME;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
@@ -35,16 +36,15 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertTask(int id, String taskdetail) {
+    void insertTask(int id, String taskdetail) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TASKS_COLUMN_ID, id);
         contentValues.put(TASKS_COLUMN_TASK_DETAIL, taskdetail);
         db.insert(TASKS_TABLE_NAME, null, contentValues);
-        return true;
     }
 
-    public String getTask(int id) {
+    String getTask(int id) {
         String task = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY_GET_ITEM + id, null);
@@ -60,23 +60,27 @@ public class DBHelper extends SQLiteOpenHelper {
         return (int) DatabaseUtils.queryNumEntries(db, TASKS_TABLE_NAME);
     }
 
-    public boolean updateTask(int id, String taskdetail) {
+    void updateTask(int id, String taskdetail) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TASKS_COLUMN_ID, id);
         contentValues.put(TASKS_COLUMN_TASK_DETAIL, taskdetail);
         db.update(TASKS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
-        return true;
     }
 
-    public Integer deleteTask(Integer id) {
+    void deleteTask(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TASKS_TABLE_NAME,
+        db.delete(TASKS_TABLE_NAME,
                 "id = ? ",
                 new String[]{Integer.toString(id)});
     }
 
-    public ArrayList<String> getAllTasks() {
+    void deleteAllTasks() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(DELETE_ALL_DATA);
+    }
+
+    ArrayList<String> getAllTasks() {
         ArrayList<String> array_list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();

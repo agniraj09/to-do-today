@@ -10,7 +10,6 @@
     android:focusableInTouchMode="true"
     tools:context=".activities.AddNewTaskActivity">
 
-
     <CheckBox
         android:id="@+id/auto_delete_value"
         android:layout_width="wrap_content"
@@ -148,6 +147,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/task_description_value"
         android:layout_width="0dp"
@@ -190,5 +190,4 @@
             android:textSize="17sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

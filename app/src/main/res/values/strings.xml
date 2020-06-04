@@ -2,6 +2,8 @@
     <string name="app_name">To Do Today</string>
 
     <string name="title">To Do List Today</string>
+    <string name="task_overview">Task Overview</string>
+    <string name="delete_all">Delete All</string>
 
     <string name="task_description">Task Description</string>
     <string name="task_description_sample">Book Tatkal Ticket To Chennai @ 11</string>
@@ -16,6 +18,12 @@
     <string name="need_reminder">Need Reminder</string>
 
     <string name="add_task">Add Task</string>
+    <string name="task_split_up">Task Split Up</string>
+
+    <string name="total_tasks">Total Tasks</string>
+    <string name="tasks_completed">Completed Tasks</string>
+    <string name="tasks_pending">Pending Tasks</string>
+    <string name="count">99</string>
 
     <!--Original ID-->
     <!--<string name="banner_ad_unit_id">ca-app-pub-4587610802196055/6294540600</string>-->

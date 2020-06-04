@@ -80,6 +80,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         notifyItemRangeChanged(position, tasks.size());
     }
 
+    public void deleteAllTasks() {
+        TaskHelper.deleteAllTasks(context);
+        tasks.clear();
+        HomeScreenActivity.taskList.clear();
+        notifyDataSetChanged();
+    }
+
     public void markTaskCompletionStatus(int position, int taskID, boolean status) {
         TaskHelper.markTaskCompletionStatus(context, taskID, status);
         tasks.get(position).setTaskCompleted(status);

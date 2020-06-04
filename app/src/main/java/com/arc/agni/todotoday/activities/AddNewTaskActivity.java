@@ -37,9 +37,12 @@ import java.util.Date;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_HIGH;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_MEDIUM;
+import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_ADD;
 import static com.arc.agni.todotoday.constants.AppConstants.SAVE;
+import static com.arc.agni.todotoday.constants.AppConstants.TASK_ADDED;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ID;
+import static com.arc.agni.todotoday.constants.AppConstants.TASK_UPDATED;
 import static com.arc.agni.todotoday.constants.AppConstants.TEST_DEVICE_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.TITLE_ADD_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.TITLE_UPDATE_TASK;
@@ -62,7 +65,6 @@ public class AddNewTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
 
-        getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(ContextCompat.getColor(AddNewTaskActivity.this, R.color.pure_white));
@@ -147,11 +149,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
         String description = taskDescriptionValue.getEditText().getText().toString();
         if (isValidDescription(description)) {
             boolean isAutoDeleteChecked = autoDeleteCheckBox.isChecked();
-            Date dateCreated = (isAutoDeleteChecked ? Calendar.getInstance().getTime() : null);
+            Date dateCreated = Calendar.getInstance().getTime();
             TaskHelper.addTaskToDatabase(this, taskID, description, priority, isAutoDeleteChecked, dateCreated, false, 0, 0, false, false);
             Intent backToHome = new Intent(this, HomeScreenActivity.class);
-            /*setResult(RESULT_CODE_ADD);
-            finish();*/
+            backToHome.putExtra(REDIRECTED_FROM_ADD_NEW_TASK, (isItAnUpdateTask ? TASK_UPDATED : TASK_ADDED));
             backToHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(backToHome);
         }

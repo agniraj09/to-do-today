@@ -6,6 +6,9 @@ import com.arc.agni.todotoday.model.Task;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +34,7 @@ public class TaskHelper {
         // Existing Task to be updated
         else {
             // taskdetail column value - Json
-            Task task = new Task(taskID, description, priority, isAutoDeleteChecked, dateCreated, isReminderNeeded, reminderHour, reminderMinute, false);
+            Task task = new Task(taskID, description, priority, isAutoDeleteChecked, getTask(context, taskID).getDateCreated(), isReminderNeeded, reminderHour, reminderMinute, false);
             String taskdetail = convertObjectToJson(task);
             new DBHelper(context).updateTask(taskID, taskdetail);
         }
@@ -65,8 +68,13 @@ public class TaskHelper {
                 allTasks.add(convertJsonToObject(taskJson));
             }
         }
-
+        Comparator<Task> dateComparator = (taskOne, taskTwo) -> taskOne.getDateCreated().compareTo(taskTwo.getDateCreated());
+        Collections.sort(allTasks, dateComparator);
         return allTasks;
+    }
+
+    public static void deleteAllTasks(Context context) {
+        new DBHelper(context).deleteAllTasks();
     }
 
     private static String convertObjectToJson(Task task) {

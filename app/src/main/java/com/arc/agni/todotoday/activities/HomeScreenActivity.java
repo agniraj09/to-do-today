@@ -4,11 +4,23 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.adapter.TaskAdapter;
@@ -28,8 +40,11 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -37,11 +52,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.arc.agni.todotoday.constants.AppConstants.DELETE_ALL;
+import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_ADD;
 import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_UPDATE;
 import static com.arc.agni.todotoday.constants.AppConstants.RESULT_MESSAGE;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_COMPLETED;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_DELETED;
+import static com.arc.agni.todotoday.constants.AppConstants.TASK_OVERVIEW;
 import static com.arc.agni.todotoday.constants.AppConstants.TEST_DEVICE_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.TITLE_TO_DO_LIST_TODAY;
 import static com.arc.agni.todotoday.constants.AppConstants.UNDO;
@@ -62,7 +80,6 @@ public class HomeScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_screen);
         setTitle(TITLE_TO_DO_LIST_TODAY);
 
-        Objects.requireNonNull(getSupportActionBar()).hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(ContextCompat.getColor(HomeScreenActivity.this, R.color.pure_white));
@@ -76,7 +93,19 @@ public class HomeScreenActivity extends AppCompatActivity {
         populateTaskList();
         enableSwipeToDeleteAndUndo();
 
+        if (taskList.size() > 0) {
+            //placing toolbar in place of actionbar
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+        }
+
+        if (null != getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK)) {
+            showSnackBar(getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK));
+        }
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -85,21 +114,11 @@ public class HomeScreenActivity extends AppCompatActivity {
                 } else {
                     titleCard.setCardElevation(0.0F);
                 }
-            }
 
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                switch (newState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL: {
-                        addNewButton.setVisibility(View.INVISIBLE);
-                        break;
-                    }
-                    default: {
-                        addNewButton.setVisibility(View.VISIBLE);
-                    }
+                if (dy > 0) {
+                    if (addNewButton.isShown()) addNewButton.hide();
+                } else {
+                    if (!addNewButton.isShown()) addNewButton.show();
                 }
             }
         });
@@ -169,7 +188,20 @@ public class HomeScreenActivity extends AppCompatActivity {
                 // Mark Task Completed
                 else if (direction == ItemTouchHelper.RIGHT) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this)
+                    // Mark completed logic
+                    currentTask.setTaskCompleted(true);
+                    taskAdapter.markTaskCompletionStatus(position, currentTask.getId(), true);
+
+                    // Undo mark logic
+                    Snackbar snackbar = Snackbar.make(homeScreen, TASK_COMPLETED, Snackbar.LENGTH_LONG).setActionTextColor(Color.YELLOW);
+                    snackbar.setAction(UNDO, view -> {
+                        currentTask.setTaskCompleted(false);
+                        taskAdapter.markTaskCompletionStatus(position, currentTask.getId(), false);
+                    });
+                    snackbar.show();
+
+                    // Mark Completed Dialog is currently disabled.
+                    /*AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this)
                             .setTitle("Mark Completed")
                             .setMessage("Nice, Have you completed the task?")
                             .setNegativeButton("No", (arg0, arg1) -> taskAdapter.refreshItem(position))
@@ -193,7 +225,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                     dialog.setOnCancelListener(dialog1 -> {
                         taskAdapter.refreshItem(position);
                     });
-                    dialog.show();
+                    dialog.show();*/
                 }
             }
         };
@@ -202,13 +234,47 @@ public class HomeScreenActivity extends AppCompatActivity {
         itemTouchhelper.attachToRecyclerView(recyclerView);
     }
 
+    public void gotoReportsScreen() {
+        Intent reportsIntent = new Intent(HomeScreenActivity.this, ReportScreenActivity.class);
+        startActivity(reportsIntent);
+    }
 
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CODE_ADD || resultCode == RESULT_CODE_UPDATE) {
-            taskAdapter.refreshAllItems();
-            Snackbar.make(homeScreen, RESULT_MESSAGE, BaseTransientBottomBar.LENGTH_SHORT).show();
+    public void deleteAllTasks() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this)
+                .setTitle("Delete All Tasks")
+                .setMessage("Are you sure to delete all tasks ?")
+                .setNegativeButton("No", null)
+                .setPositiveButton("Yes", (arg0, arg1) -> {
+                    taskAdapter.deleteAllTasks();
+                    Objects.requireNonNull(getSupportActionBar()).hide();
+                });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    public void showSnackBar(String message) {
+        Snackbar.make(homeScreen, message, BaseTransientBottomBar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.tasks_overview:
+                gotoReportsScreen();
+                break;
+
+            case R.id.delete_all:
+                deleteAllTasks();
+                break;
         }
-    }*/
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.homescreen_menu, menu);
+        return true;
+    }
 }

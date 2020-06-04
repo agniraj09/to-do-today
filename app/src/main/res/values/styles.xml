@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/pure_white</item>
         <item name="colorPrimaryDark">@color/light_gray</item>
         <item name="colorAccent">@color/green</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="CustomTextAppearance" parent="@android:style/TextAppearance">

@@ -17,45 +17,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         card_view:cardElevation="0dp"
-        card_view:cardPreventCornerOverlap="true">
+        card_view:cardPreventCornerOverlap="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-        <TextView
+        <FrameLayout
+            android:id="@+id/toolbar_frame"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textAlignment="center"
-            android:text="@string/title"
-            android:textColor="@color/primary_text"
-            android:textSize="25sp"
-            android:gravity="center_horizontal"  />
+            android:layout_height="wrap_content">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/pure_white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/title"
+                android:textColor="@color/primary_text"
+                android:textSize="25sp" />
+
+        </FrameLayout>
     </androidx.cardview.widget.CardView>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/task_list_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/hs_adView"
         android:layout_below="@id/hs_title_card"
         android:scrollbars="vertical" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addnewtask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:onClick="createNewTask"
-        android:layout_above="@id/hs_adView"
-        android:src="@drawable/ic_add_task" />
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/hs_adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        ads:adSize="SMART_BANNER"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addnewtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/hs_adView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:onClick="createNewTask"
+        android:src="@drawable/ic_add_task" />
 
 </RelativeLayout>
