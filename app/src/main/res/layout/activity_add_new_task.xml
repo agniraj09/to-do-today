@@ -7,109 +7,7 @@
     android:background="@color/pure_white"
     android:clickable="true"
     android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:context=".activities.AddNewTaskActivity">
-
-    <CheckBox
-        android:id="@+id/auto_delete_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:checked="true"
-        android:text="@string/auto_delete_by_eod"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/low" />
-
-    <TextView
-        android:id="@+id/priority_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/task_description_value"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="@string/priority"
-        android:textColor="@color/pure_black"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_description_value" />
-
-    <TextView
-        android:id="@+id/low"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/ic_priority_low"
-        android:gravity="center_horizontal"
-        android:onClick="changePriority"
-        android:padding="5dp"
-        android:text="@string/low"
-        android:textAlignment="center"
-        android:textColor="@color/pure_white"
-        app:layout_constraintEnd_toStartOf="@+id/medium"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/task_description_value"
-        app:layout_constraintTop_toBottomOf="@+id/priority_label" />
-
-    <TextView
-        android:id="@+id/medium"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/ic_priority_no"
-        android:gravity="center_horizontal"
-        android:onClick="changePriority"
-        android:padding="5dp"
-        android:text="@string/medium"
-        android:textAlignment="center"
-        android:textColor="@color/pure_black"
-        app:layout_constraintBaseline_toBaselineOf="@+id/low"
-        app:layout_constraintEnd_toStartOf="@+id/high"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/low" />
-
-    <TextView
-        android:id="@+id/high"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/ic_priority_no"
-        android:gravity="center_horizontal"
-        android:onClick="changePriority"
-        android:padding="5dp"
-        android:text="@string/high"
-        android:textAlignment="center"
-        android:textColor="@color/pure_black"
-        app:layout_constraintBaseline_toBaselineOf="@+id/medium"
-        app:layout_constraintEnd_toEndOf="@+id/task_description_value"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/medium" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/add_save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/green"
-        android:onClick="addOrUpdateTaskToDatabase"
-        android:text="@string/add_task"
-        android:textColor="@color/pure_white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/auto_delete_value" />
 
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ant_title_card"
@@ -128,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
+            android:fontFamily="@font/sansita"
             android:padding="10dp"
             android:text="@string/add_task"
             android:textAlignment="center"
@@ -135,6 +34,186 @@
             android:textSize="25sp" />
 
     </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ant_title_card"
+        app:layout_constraintBottom_toTopOf="@+id/ant_adView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ant_title_card">
+
+        <TextView
+            android:id="@+id/recurrence_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:text="@string/recurrence"
+            android:textColor="@color/pure_black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/low" />
+
+        <Spinner
+            android:id="@+id/recurrence_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recurrence_label" />
+
+        <CheckBox
+            android:id="@+id/auto_delete_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:checked="true"
+            android:text="@string/auto_delete_by_eod"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recurrence_value" />
+
+
+        <TextView
+            android:id="@+id/low"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ic_priority_low"
+            android:gravity="center_horizontal"
+            android:onClick="changePriority"
+            android:padding="5dp"
+            android:text="@string/low"
+            android:textAlignment="center"
+            android:textColor="@color/pure_white"
+            app:layout_constraintEnd_toStartOf="@+id/medium"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/task_description_value"
+            app:layout_constraintTop_toBottomOf="@+id/priority_label" />
+
+        <TextView
+            android:id="@+id/medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_priority_no"
+            android:gravity="center_horizontal"
+            android:onClick="changePriority"
+            android:padding="5dp"
+            
+            android:text="@string/medium"
+            android:textAlignment="center"
+            android:textColor="@color/pure_black"
+            app:layout_constraintBaseline_toBaselineOf="@+id/low"
+            app:layout_constraintEnd_toStartOf="@+id/high"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/low" />
+
+        <TextView
+            android:id="@+id/high"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_priority_no"
+            android:gravity="center_horizontal"
+            android:onClick="changePriority"
+            android:padding="5dp"
+            
+            android:text="@string/high"
+            android:textAlignment="center"
+            android:textColor="@color/pure_black"
+            app:layout_constraintBaseline_toBaselineOf="@+id/medium"
+            app:layout_constraintEnd_toEndOf="@+id/task_description_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/medium" />
+
+        <TextView
+            android:id="@+id/priority_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/task_description_value"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:text="@string/priority"
+            android:textColor="@color/pure_black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/task_description_value" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/add_save_button"
+            style="@style/ButtonColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:onClick="addOrUpdateTaskToDatabase"
+            android:text="@string/add_task"
+            android:textColor="@color/pure_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/auto_delete_value" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/task_description_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginStart="32dp"
+            android:textColorHint="@color/pure_black"
+            app:counterEnabled="true"
+            app:counterMaxLength="70"
+            app:errorEnabled="true"
+            app:hintAnimationEnabled="true"
+            app:hintTextAppearance="@style/CustomTextAppearance"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ic_edittext_view"
+                android:ems="15"
+                android:gravity="center"
+                android:hint="@string/task_description"
+                android:inputType="textMultiLine"
+                android:selectAllOnFocus="true"
+                android:maxLength="70"
+                android:minLines="2"
+                android:nextFocusLeft="@id/task_description_value"
+                android:nextFocusUp="@id/task_description_value"
+                android:padding="13dp"
+                android:paddingTop="15dp"
+                android:scrollbars="vertical"
+                android:textAlignment="center"
+                android:textColor="@color/pure_black"
+                android:textSize="17sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/ant_adView"
@@ -147,47 +226,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/task_description_value"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ant_title_card"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:textColorHint="@color/pure_black"
-        app:counterEnabled="true"
-        app:counterMaxLength="70"
-        app:errorEnabled="true"
-        app:hintAnimationEnabled="true"
-        app:hintTextAppearance="@style/CustomTextAppearance"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ant_title_card">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_edittext_view"
-            android:ems="15"
-            android:gravity="center"
-            android:hint="@string/task_description"
-            android:inputType="textMultiLine"
-            android:maxLength="70"
-            android:minLines="2"
-            android:nextFocusLeft="@id/task_description_value"
-            android:nextFocusUp="@id/task_description_value"
-            android:padding="13dp"
-            android:paddingTop="15dp"
-            android:scrollbars="vertical"
-            android:textAlignment="center"
-            android:textColor="@color/pure_black"
-            android:textSize="17sp" />
-
-    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,10 +26,11 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal|center_vertical"
             android:padding="10dp"
-            android:text="@string/task_split_up"
+            android:text="@string/task_overview"
+            android:fontFamily="@font/sansita"
             android:textAlignment="center"
             android:textColor="@color/primary_text"
-            android:textSize="25sp" />
+            android:textSize="23sp" />
 
     </androidx.cardview.widget.CardView>
 

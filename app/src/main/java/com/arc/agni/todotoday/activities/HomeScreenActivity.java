@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -71,7 +73,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     LinearLayoutManager layoutManager;
     public RecyclerView recyclerView;
     FloatingActionButton addNewButton;
-    RelativeLayout homeScreen;
+    ConstraintLayout homeScreen;
     CardView titleCard;
 
     @Override
@@ -99,6 +101,8 @@ public class HomeScreenActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         }
+
+        showOrHideChilloutLayout();
 
         if (null != getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK)) {
             showSnackBar(getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK));
@@ -139,7 +143,6 @@ public class HomeScreenActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(taskAdapter);
-
         }
     }
 
@@ -182,8 +185,10 @@ public class HomeScreenActivity extends AppCompatActivity {
                     snackbar.setAction(UNDO, view -> {
                         taskAdapter.restoreItem(HomeScreenActivity.this, currentTask, position);
                         recyclerView.scrollToPosition(position);
+                        showOrHideChilloutLayout();
                     });
                     snackbar.show();
+                    showOrHideChilloutLayout();
                 }
                 // Mark Task Completed
                 else if (direction == ItemTouchHelper.RIGHT) {
@@ -241,12 +246,13 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     public void deleteAllTasks() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this)
-                .setTitle("Delete All Tasks")
-                .setMessage("Are you sure to delete all tasks ?")
+                //.setTitle("Delete All Tasks")
+                .setMessage("Are you sure want to delete all tasks ?")
                 .setNegativeButton("No", null)
                 .setPositiveButton("Yes", (arg0, arg1) -> {
                     taskAdapter.deleteAllTasks();
                     Objects.requireNonNull(getSupportActionBar()).hide();
+                    showOrHideChilloutLayout();
                 });
         Dialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
@@ -255,6 +261,14 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     public void showSnackBar(String message) {
         Snackbar.make(homeScreen, message, BaseTransientBottomBar.LENGTH_SHORT).show();
+    }
+
+    public void showOrHideChilloutLayout() {
+        if (taskList.size() > 0) {
+            findViewById(R.id.no_tasks_view).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.no_tasks_view).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

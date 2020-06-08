@@ -4,6 +4,7 @@
     <string name="title">To Do List Today</string>
     <string name="task_overview">Task Overview</string>
     <string name="delete_all">Delete All</string>
+    <string name="no_task_message">Chill out,\nYou have no tasks to work upon!</string>
 
     <string name="task_description">Task Description</string>
     <string name="task_description_sample">Book Tatkal Ticket To Chennai @ 11</string>
@@ -12,6 +13,7 @@
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
+    <string name="recurrence">Recurrence</string>
     <string name="reminder_time_sample">88:88 a.m.</string>
 
     <string name="auto_delete_by_eod">Auto delete by end of the day</string>

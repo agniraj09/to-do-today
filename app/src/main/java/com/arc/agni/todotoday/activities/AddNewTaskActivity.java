@@ -10,15 +10,18 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -31,12 +34,15 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_HIGH;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_MEDIUM;
+import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE;
 import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_ADD;
 import static com.arc.agni.todotoday.constants.AppConstants.SAVE;
@@ -54,6 +60,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     TextView lowPriority;
     TextView mediumPriority;
     TextView highPriority;
+    Spinner recurrenceSpinner;
     CheckBox autoDeleteCheckBox;
     Button addOrSaveButton;
     boolean isItAnUpdateTask;
@@ -74,6 +81,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
         lowPriority = findViewById(R.id.low);
         mediumPriority = findViewById(R.id.medium);
         highPriority = findViewById(R.id.high);
+        recurrenceSpinner = findViewById(R.id.recurrence_value);
+        addItemsToRecurrenceDropdown();
         autoDeleteCheckBox = findViewById(R.id.auto_delete_value);
         addOrSaveButton = findViewById(R.id.add_save_button);
 
@@ -98,6 +107,13 @@ public class AddNewTaskActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
         //AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+    }
+
+    private void addItemsToRecurrenceDropdown() {
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, RECURRENCE);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        recurrenceSpinner.setAdapter(dataAdapter);
     }
 
     public void changePriority(View view) {
@@ -129,6 +145,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
         taskDescriptionValue.getEditText().setText(task.getDescription());
         View priority = findViewById(PRIORITY_LOW.equalsIgnoreCase(task.getPriority()) ? R.id.low : (PRIORITY_MEDIUM.equalsIgnoreCase(task.getPriority()) ? R.id.medium : R.id.high));
         changePriority(priority);
+        String recurrence = String.valueOf(recurrenceSpinner.getSelectedItem());
+        Log.e("re",recurrence);
         autoDeleteCheckBox.setChecked(task.isAutoDeleteByEOD());
         addOrSaveButton.setText(SAVE);
     }
@@ -166,8 +184,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (isItAnUpdateTask) {
             new AlertDialog.Builder(this)
-                    .setTitle("Discard Edit")
-                    .setMessage("Do you want to discard the changes?")
+                    //.setTitle("Discard Edit")
+                    .setMessage("Discard changes?")
                     .setNegativeButton("No", null)
                     .setPositiveButton("Yes", (arg0, arg1) -> {
                         Intent homeIntent = new Intent(this, HomeScreenActivity.class);

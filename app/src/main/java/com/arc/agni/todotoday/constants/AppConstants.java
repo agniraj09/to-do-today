@@ -1,5 +1,8 @@
 package com.arc.agni.todotoday.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class AppConstants {
 
     // Screen Titles
@@ -12,6 +15,8 @@ public class AppConstants {
     public static final String PRIORITY_MEDIUM = "Medium";
     public static final String PRIORITY_HIGH = "High";
 
+    public static final List<String> RECURRENCE = Arrays.asList("One Time Task", "Daily Task", "Weekly Task", "Monthly Task");
+
     // Intent Constants
     public static final String TASK_ID = "taskID";
 
@@ -19,9 +24,9 @@ public class AppConstants {
 
     // DB Constants
     public static final String DATABASE_NAME = "arc.db";
-    public static final String TASKS_TABLE_NAME = "tasks";
-    public static final String TASKS_COLUMN_ID = "id";
-    public static final String TASKS_COLUMN_TASK_DETAIL = "taskdetail";
+    private static final String TASKS_TABLE_NAME = "tasks";
+    private static final String TASKS_COLUMN_ID = "id";
+    private static final String TASKS_COLUMN_TASK_DETAIL = "taskdetail";
     public static final String QUERY_SELECT_DATA = "select * from " + TASKS_TABLE_NAME;
     public static final String QUERY_CREATE_TABLE = "create table " + TASKS_TABLE_NAME + " (" + TASKS_COLUMN_ID + " integer primary key," + TASKS_COLUMN_TASK_DETAIL + " text)";
     public static final String QUERY_DROP_TALE = "DROP TABLE IF EXISTS " + TASKS_TABLE_NAME;
