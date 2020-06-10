@@ -1,7 +1,11 @@
 package com.arc.agni.todotoday.constants;
 
+import com.arc.agni.todotoday.R;
+
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppConstants {
 
@@ -15,7 +19,17 @@ public class AppConstants {
     public static final String PRIORITY_MEDIUM = "Medium";
     public static final String PRIORITY_HIGH = "High";
 
-    public static final List<String> RECURRENCE = Arrays.asList("One Time Task", "Daily Task", "Weekly Task", "Monthly Task");
+    public static final String RECURRENCE_NONE = "none";
+    public static final String RECURRENCE_DAILY = "daily";
+    public static final String RECURRENCE_WEEKLY = "weekly";
+    public static final String RECURRENCE_MONTHLY = "monthly";
+
+
+    public static final List<String> RECURRENCE = Arrays.asList("Today Only", "Daily Task", "Weekly Task", "Monthly Task");
+    public static final List<Integer> NOTIFY_BEFORE_TIME_IDS = Arrays.asList(R.id.five, R.id.ten, R.id.fifteen, R.id.thirty);
+    public static final List<Integer> NOTIFY_BEFORE_TIME_VALUES = Arrays.asList(5, 10, 15, 30);
+    public static final List<Integer> RECURRENCE_IDS = Arrays.asList(R.id.none, R.id.daily, R.id.weekly, R.id.monthly);
+    public static final List<String> RECURRENCE_VALUES = Arrays.asList("none", "daily", "weekly", "monthly");
 
     // Intent Constants
     public static final String TASK_ID = "taskID";
@@ -24,9 +38,9 @@ public class AppConstants {
 
     // DB Constants
     public static final String DATABASE_NAME = "arc.db";
-    private static final String TASKS_TABLE_NAME = "tasks";
-    private static final String TASKS_COLUMN_ID = "id";
-    private static final String TASKS_COLUMN_TASK_DETAIL = "taskdetail";
+    public static final String TASKS_TABLE_NAME = "tasks";
+    public static final String TASKS_COLUMN_ID = "id";
+    public static final String TASKS_COLUMN_TASK_DETAIL = "taskdetail";
     public static final String QUERY_SELECT_DATA = "select * from " + TASKS_TABLE_NAME;
     public static final String QUERY_CREATE_TABLE = "create table " + TASKS_TABLE_NAME + " (" + TASKS_COLUMN_ID + " integer primary key," + TASKS_COLUMN_TASK_DETAIL + " text)";
     public static final String QUERY_DROP_TALE = "DROP TABLE IF EXISTS " + TASKS_TABLE_NAME;

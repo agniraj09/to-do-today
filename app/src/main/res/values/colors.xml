@@ -18,6 +18,7 @@
     <color name="label_color">@android:color/holo_purple</color>
 
     <color name="red">#D50000</color>
+    <color name="orange">#FF6D00</color>
     <color name="yellowish">#FFEB3B</color>
     <color name="green">#00C853</color>
     <color name="mild_green">#7DE43B</color>

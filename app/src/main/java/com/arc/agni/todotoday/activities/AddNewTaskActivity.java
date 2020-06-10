@@ -1,66 +1,62 @@
 package com.arc.agni.todotoday.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
-import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.arc.agni.todotoday.R;
-import com.arc.agni.todotoday.helper.DBHelper;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import static com.arc.agni.todotoday.constants.AppConstants.NOTIFY_BEFORE_TIME_IDS;
+import static com.arc.agni.todotoday.constants.AppConstants.NOTIFY_BEFORE_TIME_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_HIGH;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_MEDIUM;
-import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE;
+import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_IDS;
+import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NONE;
+import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
-import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_ADD;
 import static com.arc.agni.todotoday.constants.AppConstants.SAVE;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ADDED;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_UPDATED;
 import static com.arc.agni.todotoday.constants.AppConstants.TEST_DEVICE_ID;
-import static com.arc.agni.todotoday.constants.AppConstants.TITLE_ADD_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.TITLE_UPDATE_TASK;
 
 public class AddNewTaskActivity extends AppCompatActivity {
 
     TextInputLayout taskDescriptionValue;
     String priority = PRIORITY_LOW;
+    int notifyBeforeMinutes = NOTIFY_BEFORE_TIME_VALUES.get(0);
+    String recurrenceType = RECURRENCE_VALUES.get(0);
     TextView lowPriority;
     TextView mediumPriority;
     TextView highPriority;
-    Spinner recurrenceSpinner;
+    CheckBox isReminderNeeded;
+    EditText taskTime;
+    int taskTimeHour;
+    int taskTimeMinute;
     CheckBox autoDeleteCheckBox;
     Button addOrSaveButton;
     boolean isItAnUpdateTask;
@@ -81,8 +77,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
         lowPriority = findViewById(R.id.low);
         mediumPriority = findViewById(R.id.medium);
         highPriority = findViewById(R.id.high);
-        recurrenceSpinner = findViewById(R.id.recurrence_value);
-        addItemsToRecurrenceDropdown();
+        isReminderNeeded = findViewById(R.id.need_reminder);
+        taskTime = findViewById(R.id.task_time);
         autoDeleteCheckBox = findViewById(R.id.auto_delete_value);
         addOrSaveButton = findViewById(R.id.add_save_button);
 
@@ -96,9 +92,12 @@ public class AddNewTaskActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.ant_title)).setText(TITLE_UPDATE_TASK);
         }
 
-        taskDescriptionValue.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                hideKeyboard(v);
+        isReminderNeeded.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                findViewById(R.id.notification_items).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.notification_items).setVisibility(View.GONE);
+                resetTaskTimeLayout();
             }
         });
 
@@ -109,17 +108,9 @@ public class AddNewTaskActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
-    private void addItemsToRecurrenceDropdown() {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, RECURRENCE);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        recurrenceSpinner.setAdapter(dataAdapter);
-    }
-
     public void changePriority(View view) {
         if (view.getId() == R.id.low) {
             findViewById(R.id.low).setBackgroundResource(R.drawable.ic_priority_low);
-
             setPriorityAndDehighlightOtheOptions(PRIORITY_LOW, R.id.low, R.id.medium, R.id.high);
         } else if (view.getId() == R.id.medium) {
             findViewById(R.id.medium).setBackgroundResource(R.drawable.ic_priority_medium);
@@ -140,13 +131,39 @@ public class AddNewTaskActivity extends AppCompatActivity {
         ((TextView) findViewById(priority2ToDeHighlight)).setTextColor(getResources().getColor(R.color.pure_black));
     }
 
+    public void selectNotifyBeforeTime(View view) {
+        for (int id : NOTIFY_BEFORE_TIME_IDS) {
+            if (view.getId() == id) {
+                findViewById(id).setBackgroundResource(R.drawable.ic_priority_low);
+                ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_white));
+            } else {
+                findViewById(id).setBackgroundResource(R.drawable.ic_priority_no);
+                ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_black));
+            }
+        }
+        notifyBeforeMinutes = NOTIFY_BEFORE_TIME_VALUES.get(NOTIFY_BEFORE_TIME_IDS.indexOf(view.getId()));
+    }
+
+    public void selectRecurrence(View view) {
+        for (int id : RECURRENCE_IDS) {
+            if (view.getId() == id) {
+                findViewById(id).setBackgroundResource(R.drawable.ic_priority_low);
+                ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_white));
+            } else {
+                findViewById(id).setBackgroundResource(R.drawable.ic_priority_no);
+                ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_black));
+            }
+        }
+        recurrenceType = RECURRENCE_VALUES.get(RECURRENCE_IDS.indexOf(view.getId()));
+        autoDeleteCheckBox.setVisibility(RECURRENCE_NONE.equalsIgnoreCase(recurrenceType) ? View.VISIBLE : View.GONE);
+        resetTaskTimeLayout();
+    }
+
     private void prePopulateDataForTaskUpdate(int taskID) {
         Task task = TaskHelper.getTask(this, taskID);
         taskDescriptionValue.getEditText().setText(task.getDescription());
         View priority = findViewById(PRIORITY_LOW.equalsIgnoreCase(task.getPriority()) ? R.id.low : (PRIORITY_MEDIUM.equalsIgnoreCase(task.getPriority()) ? R.id.medium : R.id.high));
         changePriority(priority);
-        String recurrence = String.valueOf(recurrenceSpinner.getSelectedItem());
-        Log.e("re",recurrence);
         autoDeleteCheckBox.setChecked(task.isAutoDeleteByEOD());
         addOrSaveButton.setText(SAVE);
     }
@@ -163,9 +180,51 @@ public class AddNewTaskActivity extends AppCompatActivity {
         return valid;
     }
 
+    public void resetTaskTimeLayout() {
+        findViewById(R.id.task_time_error).setVisibility(View.GONE);
+        findViewById(R.id.task_time).setBackgroundResource(R.drawable.ic_edittext_box);
+        ((TextView) findViewById(R.id.task_time_label)).setTextColor(getResources().getColor(R.color.pure_black));
+        ((TextView) findViewById(R.id.task_time_error)).setText(getResources().getString(R.string.task_time_error_empty));
+        taskTime.setTextColor(getResources().getColor(R.color.pure_black));
+        taskTime.setText("");
+    }
+
+    public boolean checkIfValidTime(int hour, int minute) {
+
+        /*Check 1 - Not null check*/
+        if (hour == 0 && minute == 0) {
+            findViewById(R.id.task_time_error).setVisibility(View.VISIBLE);
+            findViewById(R.id.task_time).setBackgroundResource(R.drawable.ic_edittext_box_error);
+            ((TextView) findViewById(R.id.task_time_label)).setTextColor(getResources().getColor(R.color.orange));
+            ((TextView) findViewById(R.id.task_time_error)).setText(getResources().getString(R.string.task_time_error_empty));
+            //taskTime.setError("Please select valid time for task");
+            //Toast.makeText(AddNewTaskActivity.this, "Please select valid time for task", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        /*Check 2 - only if NoRecurrence is selected */
+        Calendar selectedTime = Calendar.getInstance();
+        selectedTime.set(Calendar.HOUR_OF_DAY, hour);
+        selectedTime.set(Calendar.MINUTE, minute);
+        if (RECURRENCE_NONE.equalsIgnoreCase(recurrenceType) && selectedTime.getTime().before(Calendar.getInstance().getTime())) {
+            findViewById(R.id.task_time_error).setVisibility(View.VISIBLE);
+            findViewById(R.id.task_time).setBackgroundResource(R.drawable.ic_edittext_box_error);
+            ((TextView) findViewById(R.id.task_time_label)).setTextColor(getResources().getColor(R.color.orange));
+            ((TextView) findViewById(R.id.task_time_error)).setText(getResources().getString(R.string.task_time_error_invalid_time));
+            taskTime.setTextColor(getResources().getColor(R.color.orange));
+            //taskTime.setError("Please select future time");
+            //Toast.makeText(AddNewTaskActivity.this, "Please select future time", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        /* All validations are over - time is valid - set everything to default*/
+        resetTaskTimeLayout();
+        return true;
+    }
+
     public void addOrUpdateTaskToDatabase(View view) {
         String description = taskDescriptionValue.getEditText().getText().toString();
-        if (isValidDescription(description)) {
+        if (isValidDescription(description) && checkIfValidTime(taskTimeHour, taskTimeMinute)) {
             boolean isAutoDeleteChecked = autoDeleteCheckBox.isChecked();
             Date dateCreated = Calendar.getInstance().getTime();
             TaskHelper.addTaskToDatabase(this, taskID, description, priority, isAutoDeleteChecked, dateCreated, false, 0, 0, false, false);
@@ -176,8 +235,32 @@ public class AddNewTaskActivity extends AppCompatActivity {
         }
     }
 
-    public void hideKeyboard(View view) {
+/*    public void hideKeyboard(View view) {
         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }*/
+
+    public void timePicker(View view) {
+        final Calendar currentTime = Calendar.getInstance();
+        final int hourOfDay = currentTime.get(Calendar.HOUR_OF_DAY);
+        final int minuteOfHour = currentTime.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (timePicker, hour, minute) -> {
+            taskTimeHour = 0;
+            taskTimeMinute = 0;
+
+            if (checkIfValidTime(hour, minute)) {
+                taskTimeHour = hour;
+                taskTimeMinute = minute;
+                Calendar selectedTime = Calendar.getInstance();
+                selectedTime.set(Calendar.HOUR_OF_DAY, hour);
+                selectedTime.set(Calendar.MINUTE, minute);
+                taskTime.setText(new SimpleDateFormat("h : mm a", Locale.ENGLISH).format(selectedTime.getTime()));
+            } else {
+                taskTime.setText("");
+            }
+        }, hourOfDay, minuteOfHour, false);
+
+        timePickerDialog.show();
     }
 
     @Override

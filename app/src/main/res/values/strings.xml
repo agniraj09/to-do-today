@@ -13,7 +13,20 @@
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
+    <string name="five">5</string>
+    <string name="ten">10</string>
+    <string name="fifteen">15</string>
+    <string name="thirty">30</string>
     <string name="recurrence">Recurrence</string>
+    <string name="none">None</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="task_time">Task time</string>
+    <string name="task_time_error_empty">Task time can\'t be empty</string>
+    <string name="task_time_error_invalid_time">Past time can\'t be set for one time task</string>
+    <string name="time">HH:MM</string>
+    <string name="notify_before">Notify Before(mins)</string>
     <string name="reminder_time_sample">88:88 a.m.</string>
 
     <string name="auto_delete_by_eod">Auto delete by end of the day</string>
