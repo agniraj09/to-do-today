@@ -30,7 +30,7 @@
     <string name="reminder_time_sample">88:88 a.m.</string>
 
     <string name="auto_delete_by_eod">Auto delete by end of the day</string>
-    <string name="need_reminder">Need Reminder</string>
+    <string name="set_reminder">Set Reminder</string>
 
     <string name="add_task">Add Task</string>
     <string name="task_split_up">Task Split Up</string>

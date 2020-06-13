@@ -1,5 +1,6 @@
 package com.arc.agni.todotoday.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,7 @@ import com.arc.agni.todotoday.activities.AddNewTaskActivity;
 import com.arc.agni.todotoday.activities.HomeScreenActivity;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.List;
 
@@ -175,6 +177,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             } else {
                 holder.editTask.setVisibility(View.GONE);
             }
+
+            holder.taskDetailLayout.setOnLongClickListener(v -> {
+                BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(context);
+                View sheetView = ((Activity) context).getLayoutInflater().inflate(R.layout.task_options_bottom_sheet, null);
+                mBottomSheetDialog.setContentView(sheetView);
+                mBottomSheetDialog.show();
+
+                sheetView.findViewById(R.id.fragment_history_bottom_sheet_edit).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent editIntent = new Intent(context, AddNewTaskActivity.class);
+                        editIntent.putExtra(TASK_ID, currentTask.getId());
+                        context.startActivity(editIntent);
+                    }
+                });
+
+                return true;
+            });
         }
 
     }

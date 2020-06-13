@@ -3,33 +3,25 @@ package com.arc.agni.todotoday.constants;
 import com.arc.agni.todotoday.R;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AppConstants {
 
     // Screen Titles
     public static final String TITLE_TO_DO_LIST_TODAY = "To Do List Today";
-    public static final String TITLE_ADD_TASK = "Add New Task";
     public static final String TITLE_UPDATE_TASK = "Update Task";
 
-    // Priority Constants
-    public static final String PRIORITY_LOW = "Low";
-    public static final String PRIORITY_MEDIUM = "Medium";
-    public static final String PRIORITY_HIGH = "High";
-
     public static final String RECURRENCE_NONE = "none";
-    public static final String RECURRENCE_DAILY = "daily";
-    public static final String RECURRENCE_WEEKLY = "weekly";
-    public static final String RECURRENCE_MONTHLY = "monthly";
-
-
-    public static final List<String> RECURRENCE = Arrays.asList("Today Only", "Daily Task", "Weekly Task", "Monthly Task");
+    
     public static final List<Integer> NOTIFY_BEFORE_TIME_IDS = Arrays.asList(R.id.five, R.id.ten, R.id.fifteen, R.id.thirty);
     public static final List<Integer> NOTIFY_BEFORE_TIME_VALUES = Arrays.asList(5, 10, 15, 30);
     public static final List<Integer> RECURRENCE_IDS = Arrays.asList(R.id.none, R.id.daily, R.id.weekly, R.id.monthly);
     public static final List<String> RECURRENCE_VALUES = Arrays.asList("none", "daily", "weekly", "monthly");
+    public static final String PRIORITY_LOW = "Low", PRIORITY_MEDIUM = "Medium", PRIORITY_HIGH = "High";
+    public static final List<Integer> PRIORITY_IDS = Arrays.asList(R.id.low, R.id.medium, R.id.high);
+    public static final List<Integer> PRIORITY_BACKGROUND = Arrays.asList(R.drawable.ic_priority_low, R.drawable.ic_priority_medium, R.drawable.ic_priority_high);
+    public static final List<String> PRIORITY_VALUES = Arrays.asList(PRIORITY_LOW, PRIORITY_MEDIUM, PRIORITY_HIGH);
+
 
     // Intent Constants
     public static final String TASK_ID = "taskID";
