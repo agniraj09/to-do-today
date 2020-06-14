@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
+import com.arc.agni.todotoday.reminder.ReminderBroadcast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -64,7 +65,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     CheckBox autoDeleteCheckBox;
     Button addOrSaveButton;
     boolean isItAnUpdateTask;
-    int taskID;
+    long taskID;
     ConstraintLayout notifyBeforeOptionLayout;
 
     @Override
@@ -93,7 +94,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         taskDescriptionValue.getEditText().setRawInputType(InputType.TYPE_CLASS_TEXT);
 
         // This is applicable for edit task only. When user wants to edit a task, TASK_ID will be send in intent extra from HomeScreenActivity.
-        taskID = getIntent().getIntExtra(TASK_ID, 0);
+        taskID = getIntent().getLongExtra(TASK_ID, 0);
         if (taskID != 0) {
             isItAnUpdateTask = true;
             prePopulateDataForTaskUpdate(taskID);
@@ -301,12 +302,27 @@ public class AddNewTaskActivity extends AppCompatActivity {
         }
     }
 
-    private void prePopulateDataForTaskUpdate(int taskID) {
+    private void prePopulateDataForTaskUpdate(long taskID) {
         Task task = TaskHelper.getTask(this, taskID);
         taskDescriptionValue.getEditText().setText(task.getDescription());
-        View priority = findViewById(PRIORITY_LOW.equalsIgnoreCase(task.getPriority()) ? R.id.low : (PRIORITY_MEDIUM.equalsIgnoreCase(task.getPriority()) ? R.id.medium : R.id.high));
-        changePriority(priority);
-        autoDeleteCheckBox.setChecked(task.isAutoDeleteByEOD());
+        changePriority(findViewById(PRIORITY_IDS.get(PRIORITY_VALUES.indexOf(task.getPriority()))));
+        selectRecurrence(findViewById(RECURRENCE_IDS.get(RECURRENCE_VALUES.indexOf(task.getRecurrence()))));
+        if (task.isReminderSet()) {
+            isSetReminderChecked.setChecked(true);
+            Calendar selectedTime = Calendar.getInstance();
+            selectedTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
+            selectedTime.set(Calendar.MINUTE, task.getReminderMinute());
+            taskTime.setText(new SimpleDateFormat("h : mm a", Locale.ENGLISH).format(selectedTime.getTime()));
+            findViewById(R.id.notification_items).setVisibility(View.VISIBLE);
+            if (task.getRemindBefore() != 0) {
+                notifyBeforeOptionLayout.setVisibility(View.VISIBLE);
+                selectNotifyBeforeTime(findViewById(NOTIFY_BEFORE_TIME_IDS.get(NOTIFY_BEFORE_TIME_VALUES.indexOf(task.getRemindBefore()))));
+            }
+        }
+
+        if (RECURRENCE_NONE.equalsIgnoreCase(task.getRecurrence())) {
+            autoDeleteCheckBox.setChecked(task.isAutoDeleteByEOD());
+        }
         addOrSaveButton.setText(SAVE);
     }
 
@@ -363,16 +379,18 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
     public void addOrUpdateTaskToDatabase(View view) {
         String description = taskDescriptionValue.getEditText().getText().toString();
-        if (isValidDescription(description)
-                && checkIfTaskTimeIsValid(taskTimeHour, taskTimeMinute)
-                && checkIfNotifyBeforeMinuteIsValid(taskTimeHour, taskTimeMinute, notifyBeforeMinutes)) {
+        if (isValidDescription(description) && (!isSetReminderChecked.isChecked() || (checkIfTaskTimeIsValid(taskTimeHour, taskTimeMinute)
+                && checkIfNotifyBeforeMinuteIsValid(taskTimeHour, taskTimeMinute, notifyBeforeMinutes)))) {
             boolean isAutoDeleteChecked = autoDeleteCheckBox.isChecked();
             Date dateCreated = Calendar.getInstance().getTime();
-            TaskHelper.addTaskToDatabase(this, taskID, description, priority, isAutoDeleteChecked, dateCreated, false, 0, 0, false, false);
+            Task task = new Task(description, priority, recurrenceType, isAutoDeleteChecked, dateCreated, isSetReminderChecked.isChecked(), taskTimeHour, taskTimeMinute, notifyBeforeMinutes, false);
+            taskID = TaskHelper.addTaskToDatabase(this, taskID, task);
+
             Intent backToHome = new Intent(this, HomeScreenActivity.class);
             backToHome.putExtra(REDIRECTED_FROM_ADD_NEW_TASK, (isItAnUpdateTask ? TASK_UPDATED : TASK_ADDED));
             backToHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(backToHome);
+
         }
     }
 

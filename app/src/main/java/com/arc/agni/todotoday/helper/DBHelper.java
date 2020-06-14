@@ -1,6 +1,8 @@
 package com.arc.agni.todotoday.helper;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -36,15 +38,24 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    void insertTask(int id, String taskdetail) {
+    long insertRestoredTask(long id, String taskdetail) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TASKS_COLUMN_ID, id);
         contentValues.put(TASKS_COLUMN_TASK_DETAIL, taskdetail);
         db.insert(TASKS_TABLE_NAME, null, contentValues);
+        return id;
     }
 
-    String getTask(int id) {
+    long insertNewTask(String taskdetail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TASKS_COLUMN_TASK_DETAIL, taskdetail);
+        long taskID = db.insert(TASKS_TABLE_NAME, null, contentValues);
+        return taskID;
+    }
+
+    String getTask(long id) {
         String task = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY_GET_ITEM + id, null);
@@ -60,19 +71,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return (int) DatabaseUtils.queryNumEntries(db, TASKS_TABLE_NAME);
     }
 
-    void updateTask(int id, String taskdetail) {
+    void updateTask(long id, String taskdetail) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TASKS_COLUMN_ID, id);
         contentValues.put(TASKS_COLUMN_TASK_DETAIL, taskdetail);
-        db.update(TASKS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        db.update(TASKS_TABLE_NAME, contentValues, "id = ? ", new String[]{Long.toString(id)});
     }
 
-    void deleteTask(Integer id) {
+    void deleteTask(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TASKS_TABLE_NAME,
                 "id = ? ",
-                new String[]{Integer.toString(id)});
+                new String[]{Long.toString(id)});
     }
 
     void deleteAllTasks() {
@@ -80,18 +91,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(DELETE_ALL_DATA);
     }
 
-    ArrayList<String> getAllTasks() {
-        ArrayList<String> array_list = new ArrayList<>();
+    Map<Long, String> getAllTasks() {
+        Map<Long, String> taskList = new TreeMap<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(QUERY_SELECT_DATA, null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            array_list.add(res.getString(res.getColumnIndex(TASKS_COLUMN_TASK_DETAIL)));
+            taskList.put(res.getLong(res.getColumnIndex(TASKS_COLUMN_ID)), res.getString(res.getColumnIndex(TASKS_COLUMN_TASK_DETAIL)));
             res.moveToNext();
         }
         res.close();
-        return array_list;
+        return taskList;
     }
 }

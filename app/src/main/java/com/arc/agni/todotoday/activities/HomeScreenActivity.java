@@ -104,10 +104,6 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         showOrHideChilloutLayout();
 
-        if (null != getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK)) {
-            showSnackBar(getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK));
-        }
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -127,6 +123,10 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
 
+        // INTENT EXTRA
+        if (null != getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK)) {
+            showSnackBar(getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK));
+        }
 
         // Initialize MobileAds & Request for ads
         AdView mAdView = findViewById(R.id.hs_adView);

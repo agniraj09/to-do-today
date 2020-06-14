@@ -74,7 +74,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         return tasks;
     }
 
-    public void deleteTask(int position, int taskID) {
+    public void deleteTask(int position, long taskID) {
         TaskHelper.deleteTask(context, taskID);
         tasks.remove(position);
         HomeScreenActivity.taskList = tasks;
@@ -89,7 +89,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void markTaskCompletionStatus(int position, int taskID, boolean status) {
+    public void markTaskCompletionStatus(int position, long taskID, boolean status) {
         TaskHelper.markTaskCompletionStatus(context, taskID, status);
         tasks.get(position).setTaskCompleted(status);
         HomeScreenActivity.taskList = tasks;
@@ -121,7 +121,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     @Override
     public int getItemViewType(int position) {
         Task task = tasks.get(position);
-        return task.getId();
+        return (int) task.getId();
     }
 
     @Override

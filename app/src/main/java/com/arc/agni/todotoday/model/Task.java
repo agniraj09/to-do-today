@@ -1,41 +1,61 @@
 package com.arc.agni.todotoday.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class Task implements Serializable {
+public class Task implements Serializable, Parcelable {
 
-    private int id;
+    private long id;
     private String description;
     private String priority;
+    private String recurrence;
     private boolean autoDeleteByEOD;
     private Date dateCreated;
-    private boolean isReminderNeeded;
+    private boolean isReminderSet;
     private int reminderHour;
     private int reminderMinute;
+    private int remindBefore;
     private boolean isTaskCompleted;
 
     public Task() {
     }
 
-    public Task(int id, String description, String priority, boolean autoDeleteByEOD, Date dateCreated, boolean isReminderNeeded, int reminderHour, int reminderMinute, boolean isTaskCompleted) {
-        this.id = id;
+    public Task(String description, String priority, String recurrence, boolean autoDeleteByEOD, Date dateCreated, boolean isReminderSet, int reminderHour, int reminderMinute, int remindBefore, boolean isTaskCompleted) {
         this.description = description;
         this.priority = priority;
+        this.recurrence = recurrence;
         this.autoDeleteByEOD = autoDeleteByEOD;
         this.dateCreated = dateCreated;
-        this.isReminderNeeded = isReminderNeeded;
+        this.isReminderSet = isReminderSet;
         this.reminderHour = reminderHour;
         this.reminderMinute = reminderMinute;
+        this.remindBefore = remindBefore;
         this.isTaskCompleted = isTaskCompleted;
     }
 
-    public int getId() {
+    protected Task(Parcel in) {
+        id = in.readLong();
+        description = in.readString();
+        priority = in.readString();
+        recurrence = in.readString();
+        autoDeleteByEOD = in.readByte() != 0;
+        isReminderSet = in.readByte() != 0;
+        reminderHour = in.readInt();
+        reminderMinute = in.readInt();
+        remindBefore = in.readInt();
+        isTaskCompleted = in.readByte() != 0;
+    }
+
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -55,6 +75,14 @@ public class Task implements Serializable {
         this.priority = priority;
     }
 
+    public String getRecurrence() {
+        return recurrence;
+    }
+
+    public void setRecurrence(String recurrence) {
+        this.recurrence = recurrence;
+    }
+
     public boolean isAutoDeleteByEOD() {
         return autoDeleteByEOD;
     }
@@ -71,12 +99,12 @@ public class Task implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public boolean isReminderNeeded() {
-        return isReminderNeeded;
+    public boolean isReminderSet() {
+        return isReminderSet;
     }
 
-    public void setReminderNeeded(boolean reminderNeeded) {
-        isReminderNeeded = reminderNeeded;
+    public void setReminderSet(boolean reminderSet) {
+        isReminderSet = reminderSet;
     }
 
     public int getReminderHour() {
@@ -95,27 +123,20 @@ public class Task implements Serializable {
         this.reminderMinute = reminderMinute;
     }
 
+    public int getRemindBefore() {
+        return remindBefore;
+    }
+
+    public void setRemindBefore(int remindBefore) {
+        this.remindBefore = remindBefore;
+    }
+
     public boolean isTaskCompleted() {
         return isTaskCompleted;
     }
 
     public void setTaskCompleted(boolean taskCompleted) {
         isTaskCompleted = taskCompleted;
-    }
-
-    @Override
-    public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", priority='" + priority + '\'' +
-                ", autoDeleteByEOD=" + autoDeleteByEOD +
-                ", dateCreated=" + dateCreated +
-                ", isReminderNeeded=" + isReminderNeeded +
-                ", reminderHour=" + reminderHour +
-                ", reminderMinute=" + reminderMinute +
-                ", isTaskCompleted=" + isTaskCompleted +
-                '}';
     }
 
     @Override
@@ -130,6 +151,57 @@ public class Task implements Serializable {
 
     @Override
     public int hashCode() {
-        return id;
+        return (int) id;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", priority='" + priority + '\'' +
+                ", recurrence='" + recurrence + '\'' +
+                ", autoDeleteByEOD=" + autoDeleteByEOD +
+                ", dateCreated=" + dateCreated +
+                ", isReminderSet=" + isReminderSet +
+                ", reminderHour=" + reminderHour +
+                ", reminderMinute=" + reminderMinute +
+                ", remindBefore=" + remindBefore +
+                ", isTaskCompleted=" + isTaskCompleted +
+                '}';
+    }
+
+    /**
+     * Parcelable implementations
+     */
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(description);
+        dest.writeString(priority);
+        dest.writeString(recurrence);
+        dest.writeByte((byte) (autoDeleteByEOD ? 1 : 0));
+        dest.writeByte((byte) (isReminderSet ? 1 : 0));
+        dest.writeInt(reminderHour);
+        dest.writeInt(reminderMinute);
+        dest.writeInt(remindBefore);
+        dest.writeByte((byte) (isTaskCompleted ? 1 : 0));
     }
 }

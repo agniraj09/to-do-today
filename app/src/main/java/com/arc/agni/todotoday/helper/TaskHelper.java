@@ -2,74 +2,97 @@ package com.arc.agni.todotoday.helper;
 
 import android.content.Context;
 
+import com.arc.agni.todotoday.activities.HomeScreenActivity;
 import com.arc.agni.todotoday.model.Task;
+import com.arc.agni.todotoday.reminder.ReminderBroadcast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-
-import static com.arc.agni.todotoday.constants.AppConstants.ID_LIMIT;
+import java.util.Map;
 
 public class TaskHelper {
 
-    public static void addTaskToDatabase(Context context, int taskID, String description, String priority, boolean isAutoDeleteChecked, Date dateCreated, boolean isReminderNeeded, int reminderHour, int reminderMinute, boolean isRestoredItem, boolean isTaskCompleted) {
+    public static long addTaskToDatabase(Context context, long taskID, Task task) {
+
+        String taskdetail = convertObjectToJson(task);
+        long returnTaskID;
+
 
         // New Task to be saved in DB
-        if (taskID == 0 || isRestoredItem) {
-            if (!isRestoredItem) {
-                // id column value- Generate Task ID using a random generator
-                taskID = (new Random().nextInt(ID_LIMIT) + 1);
-            }
-
-            // taskdetail column value - Json
-            Task task = new Task(taskID, description, priority, isAutoDeleteChecked, dateCreated, isReminderNeeded, reminderHour, reminderMinute, isTaskCompleted);
-            String taskdetail = convertObjectToJson(task);
-            new DBHelper(context).insertTask(taskID, taskdetail);
+        if (taskID == 0) {
+            returnTaskID = (new DBHelper(context).insertNewTask(taskdetail));
+            task.setId(returnTaskID);
+            scheduleNotificationIfApplicable(context, task);
         }
         // Existing Task to be updated
         else {
-            // taskdetail column value - Json
-            Task task = new Task(taskID, description, priority, isAutoDeleteChecked, getTask(context, taskID).getDateCreated(), isReminderNeeded, reminderHour, reminderMinute, false);
-            String taskdetail = convertObjectToJson(task);
             new DBHelper(context).updateTask(taskID, taskdetail);
+            returnTaskID = taskID;
+            task.setId(returnTaskID);
+            scheduleNotificationIfApplicable(context, task);
         }
+
+        return returnTaskID;
+    }
+
+    private static void scheduleNotificationIfApplicable(Context context, Task task) {
+
+        // Remove any notification if exists
+        ReminderBroadcast.cancelNotification(task.getId(), context);
+
+        //Schedule or Cancel Reminder/Notification
+        if (task.isReminderSet()) {
+            ReminderBroadcast.buildAndScheduleNotification(context, task.getId(), task);
+        } else {
+            ReminderBroadcast.cancelNotification(task.getId(), context);
+        }
+
     }
 
     public static void addRestoredTaskToDataBase(Context context, Task task) {
-        addTaskToDatabase(context, task.getId(), task.getDescription(), task.getPriority(), task.isAutoDeleteByEOD(), task.getDateCreated(), task.isReminderNeeded(), task.getReminderHour(), task.getReminderMinute(), true, task.isTaskCompleted());
+        String taskDetail = convertObjectToJson(task);
+        new DBHelper(context).insertRestoredTask(task.getId(), taskDetail);
+        scheduleNotificationIfApplicable(context, task);
     }
 
-    public static void markTaskCompletionStatus(Context context, int taskID, boolean status) {
+    public static void markTaskCompletionStatus(Context context, long taskID, boolean status) {
         DBHelper dbHelper = new DBHelper(context);
         Task task = convertJsonToObject(dbHelper.getTask(taskID));
         task.setTaskCompleted(status);
-        String taskdetail = convertObjectToJson(task);
-        new DBHelper(context).updateTask(taskID, taskdetail);
+        String taskDetail = convertObjectToJson(task);
+        new DBHelper(context).updateTask(taskID, taskDetail);
+
+        if (status) {
+            ReminderBroadcast.cancelNotification(taskID, context);
+        } else {
+            scheduleNotificationIfApplicable(context, task);
+        }
     }
 
-    public static void deleteTask(Context context, int taskID) {
+    public static void deleteTask(Context context, long taskID) {
         new DBHelper(context).deleteTask(taskID);
+        ReminderBroadcast.cancelNotification(taskID, context);
     }
 
-    public static Task getTask(Context context, int taskID) {
+    public static Task getTask(Context context, long taskID) {
         return convertJsonToObject(new DBHelper(context).getTask(taskID));
     }
 
     public static List<Task> getAllTasksFromDB(Context context) {
         List<Task> allTasks = new ArrayList<>();
-        List<String> allTasksInJson = new DBHelper(context).getAllTasks();
-        if (null != allTasksInJson) {
-            for (String taskJson : allTasksInJson) {
-                allTasks.add(convertJsonToObject(taskJson));
+        Map<Long, String> taskList = new DBHelper(context).getAllTasks();
+        if (null != taskList) {
+            for (Map.Entry<Long, String> taskKeyValue : taskList.entrySet()) {
+                Task task = new Task();
+                task = convertJsonToObject(taskKeyValue.getValue());
+                task.setId(taskKeyValue.getKey());
+                allTasks.add(task);
             }
         }
-        Comparator<Task> dateComparator = (taskOne, taskTwo) -> taskOne.getDateCreated().compareTo(taskTwo.getDateCreated());
-        Collections.sort(allTasks, dateComparator);
+        //Comparator<Task> dateComparator = (taskOne, taskTwo) -> taskOne.getDateCreated().compareTo(taskTwo.getDateCreated());
+        //Collections.sort(allTasks, dateComparator);
         return allTasks;
     }
 
