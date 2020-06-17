@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Task implements Serializable, Parcelable {
@@ -14,17 +15,18 @@ public class Task implements Serializable, Parcelable {
     private String priority;
     private String recurrence;
     private boolean autoDeleteByEOD;
-    private Date dateCreated;
+    private Calendar dateCreated;
     private boolean isReminderSet;
     private int reminderHour;
     private int reminderMinute;
     private int remindBefore;
     private boolean isTaskCompleted;
+    private Calendar completedDate;
 
     public Task() {
     }
 
-    public Task(String description, String priority, String recurrence, boolean autoDeleteByEOD, Date dateCreated, boolean isReminderSet, int reminderHour, int reminderMinute, int remindBefore, boolean isTaskCompleted) {
+    public Task(String description, String priority, String recurrence, boolean autoDeleteByEOD, Calendar dateCreated, boolean isReminderSet, int reminderHour, int reminderMinute, int remindBefore, boolean isTaskCompleted) {
         this.description = description;
         this.priority = priority;
         this.recurrence = recurrence;
@@ -50,6 +52,17 @@ public class Task implements Serializable, Parcelable {
         isTaskCompleted = in.readByte() != 0;
     }
 
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -91,11 +104,11 @@ public class Task implements Serializable, Parcelable {
         this.autoDeleteByEOD = autoDeleteByEOD;
     }
 
-    public Date getDateCreated() {
+    public Calendar getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(Calendar dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -139,6 +152,14 @@ public class Task implements Serializable, Parcelable {
         isTaskCompleted = taskCompleted;
     }
 
+    public Calendar getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(Calendar completedDate) {
+        this.completedDate = completedDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -168,24 +189,13 @@ public class Task implements Serializable, Parcelable {
                 ", reminderMinute=" + reminderMinute +
                 ", remindBefore=" + remindBefore +
                 ", isTaskCompleted=" + isTaskCompleted +
+                ", lastCycleDate=" + completedDate +
                 '}';
     }
 
     /**
      * Parcelable implementations
      */
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel in) {
-            return new Task(in);
-        }
-
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
@@ -204,4 +214,5 @@ public class Task implements Serializable, Parcelable {
         dest.writeInt(remindBefore);
         dest.writeByte((byte) (isTaskCompleted ? 1 : 0));
     }
+
 }

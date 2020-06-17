@@ -23,6 +23,7 @@
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
     <string name="task_time">Task time</string>
+    <string name="task_time_with_a">10:10 AM</string>
     <string name="task_time_error_empty">Task time can\'t be empty</string>
     <string name="task_time_error_invalid_time">Past time can\'t be set for one time task</string>
     <string name="time">HH:MM</string>
@@ -39,6 +40,14 @@
     <string name="tasks_completed">Completed Tasks</string>
     <string name="tasks_pending">Pending Tasks</string>
     <string name="count">99</string>
+
+    <string name="sample_priority">Medium Priority Task</string>
+    <string name="sample_date">27, September 2020 12:55 pm</string>
+    <string name="date_created_label">Date Created</string>
+    <string name="date_completed_label">Date Completed</string>
+    <string name="last_occurrence_label">Last Occurrence</string>
+    <string name="next_occurrence_label">Next Occurrence</string>
+
 
     <!--Original ID-->
     <!--<string name="banner_ad_unit_id">ca-app-pub-4587610802196055/6294540600</string>-->

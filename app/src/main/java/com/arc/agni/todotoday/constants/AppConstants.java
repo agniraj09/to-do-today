@@ -26,7 +26,15 @@ public class AppConstants {
     public static final List<Integer> PRIORITY_IDS = Arrays.asList(R.id.low, R.id.medium, R.id.high);
     public static final List<Integer> PRIORITY_COLORS = Arrays.asList(R.color.low, R.color.medium, R.color.high);
     public static final List<Integer> PRIORITY_BACKGROUND = Arrays.asList(R.drawable.ic_priority_low, R.drawable.ic_priority_medium, R.drawable.ic_priority_high);
+    public static final List<Integer> PRIORITY_LABELS = Arrays.asList(R.drawable.ic_label_low, R.drawable.ic_label_medium, R.drawable.ic_label_high);
     public static final List<String> PRIORITY_VALUES = Arrays.asList(PRIORITY_LOW, PRIORITY_MEDIUM, PRIORITY_HIGH);
+
+    //Recurrence Map Constants
+    public static final String LAST_OCCURRENCE_DATE = "last_occurrence";
+    public static final String NEXT_OCCURRENCE_DATE = "next_occurrence";
+
+    public static final String PATTERN_FULL_DATE = "dd MMM, yyyy h:mm a";
+    public static final String PATTERN_TIME = "h : mm a";
 
 
     // Intent Constants

@@ -8,6 +8,7 @@ import com.arc.agni.todotoday.reminder.ReminderBroadcast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class TaskHelper {
         ReminderBroadcast.cancelNotification(task.getId(), context);
 
         //Schedule or Cancel Reminder/Notification
-        if (task.isReminderSet()) {
+        if (!task.isTaskCompleted() && task.isReminderSet()) {
             ReminderBroadcast.buildAndScheduleNotification(context, task.getId(), task);
         } else {
             ReminderBroadcast.cancelNotification(task.getId(), context);
@@ -55,12 +56,14 @@ public class TaskHelper {
         String taskDetail = convertObjectToJson(task);
         new DBHelper(context).insertRestoredTask(task.getId(), taskDetail);
         scheduleNotificationIfApplicable(context, task);
+
     }
 
     public static void markTaskCompletionStatus(Context context, long taskID, boolean status) {
         DBHelper dbHelper = new DBHelper(context);
         Task task = convertJsonToObject(dbHelper.getTask(taskID));
         task.setTaskCompleted(status);
+        task.setCompletedDate(status ? Calendar.getInstance() : null);
         String taskDetail = convertObjectToJson(task);
         new DBHelper(context).updateTask(taskID, taskDetail);
 

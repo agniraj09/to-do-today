@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.arc.agni.todotoday.R;
+import com.arc.agni.todotoday.helper.DateHelper;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 import com.arc.agni.todotoday.reminder.ReminderBroadcast;
@@ -32,6 +33,7 @@ import androidx.core.content.ContextCompat;
 
 import static com.arc.agni.todotoday.constants.AppConstants.NOTIFY_BEFORE_TIME_IDS;
 import static com.arc.agni.todotoday.constants.AppConstants.NOTIFY_BEFORE_TIME_VALUES;
+import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_TIME;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_BACKGROUND;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_IDS;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
@@ -305,6 +307,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private void prePopulateDataForTaskUpdate(long taskID) {
         Task task = TaskHelper.getTask(this, taskID);
         taskDescriptionValue.getEditText().setText(task.getDescription());
+        taskDescriptionValue.getEditText().setSelection(taskDescriptionValue.getEditText().length());
         changePriority(findViewById(PRIORITY_IDS.get(PRIORITY_VALUES.indexOf(task.getPriority()))));
         selectRecurrence(findViewById(RECURRENCE_IDS.get(RECURRENCE_VALUES.indexOf(task.getRecurrence()))));
         if (task.isReminderSet()) {
@@ -312,7 +315,9 @@ public class AddNewTaskActivity extends AppCompatActivity {
             Calendar selectedTime = Calendar.getInstance();
             selectedTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
             selectedTime.set(Calendar.MINUTE, task.getReminderMinute());
-            taskTime.setText(new SimpleDateFormat("h : mm a", Locale.ENGLISH).format(selectedTime.getTime()));
+            taskTimeHour = task.getReminderHour();
+            taskTimeMinute = task.getReminderMinute();
+            taskTime.setText(DateHelper.formatDate(selectedTime, PATTERN_TIME));
             findViewById(R.id.notification_items).setVisibility(View.VISIBLE);
             if (task.getRemindBefore() != 0) {
                 notifyBeforeOptionLayout.setVisibility(View.VISIBLE);
@@ -382,7 +387,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         if (isValidDescription(description) && (!isSetReminderChecked.isChecked() || (checkIfTaskTimeIsValid(taskTimeHour, taskTimeMinute)
                 && checkIfNotifyBeforeMinuteIsValid(taskTimeHour, taskTimeMinute, notifyBeforeMinutes)))) {
             boolean isAutoDeleteChecked = autoDeleteCheckBox.isChecked();
-            Date dateCreated = Calendar.getInstance().getTime();
+            Calendar dateCreated = (isItAnUpdateTask ? TaskHelper.getTask(this, taskID).getDateCreated() : Calendar.getInstance());
             Task task = new Task(description, priority, recurrenceType, isAutoDeleteChecked, dateCreated, isSetReminderChecked.isChecked(), taskTimeHour, taskTimeMinute, notifyBeforeMinutes, false);
             taskID = TaskHelper.addTaskToDatabase(this, taskID, task);
 

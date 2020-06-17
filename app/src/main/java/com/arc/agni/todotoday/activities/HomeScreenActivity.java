@@ -115,11 +115,11 @@ public class HomeScreenActivity extends AppCompatActivity {
                     titleCard.setCardElevation(0.0F);
                 }
 
-                if (dy > 0) {
+/*                if (dy > 0) {
                     if (addNewButton.isShown()) addNewButton.hide();
                 } else {
                     if (!addNewButton.isShown()) addNewButton.show();
-                }
+                }*/
             }
         });
 
@@ -153,7 +153,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         Calendar dateCreated = Calendar.getInstance(); // Will be changed to correct value in loop below
         for (Task task : taskList) {
             if (task.isAutoDeleteByEOD() && null != task.getDateCreated()) {
-                dateCreated.setTime(task.getDateCreated());
+                dateCreated.setTime(task.getDateCreated().getTime());
                 if (today.get(Calendar.YEAR) == dateCreated.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == dateCreated.get(Calendar.DAY_OF_YEAR)) {
                     validTasks.add(task);
                 } else {

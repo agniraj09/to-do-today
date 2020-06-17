@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="label_size">12sp</dimen>
     <dimen name="option_size">15sp</dimen>
+<!--    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="design_fab_image_size" tools:override="true">40dp</dimen>-->
 </resources>

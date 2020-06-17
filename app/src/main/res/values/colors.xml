@@ -22,6 +22,7 @@
     <color name="yellowish">#FFEB3B</color>
     <color name="green">#00C853</color>
     <color name="mild_green">#7DE43B</color>
+    <color name="sky_blue">#05D0EF</color>
     <color name="transparent">#00000000</color>
 
 </resources>

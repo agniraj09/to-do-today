@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.activities.HomeScreenActivity;
+import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 
 import java.util.Calendar;
@@ -52,10 +53,6 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
         // Fire notification
         notificationManager.notify((int) notificationID, notification);
-
-        if (!RECURRENCE_NONE.equalsIgnoreCase(task.getRecurrence())) {
-            scheduleNextReminderIfApplicable(context, task);
-        }
     }
 
     private void scheduleNextReminderIfApplicable(Context context, Task task) {
