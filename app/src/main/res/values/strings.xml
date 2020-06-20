@@ -51,6 +51,17 @@
     <string name="last_occurrence_label">Last Occurrence</string>
     <string name="next_occurrence_label">Next Occurrence</string>
 
+    <string name="next">Next</string>
+    <string name="get_started">Get Started</string>
+    <string name="title1"><![CDATA[Easy & Powerful]]></string>
+    <string name="title2">Priority</string>
+    <string name="title3">Swipe Gestures</string>
+    <string name="title4"><![CDATA[View & Edit]]></string>
+
+    <string name="title1_text">Add your task in single tap and \ncustomize it with powerful options</string>
+    <string name="title2_text">Different labels available for different priority tasks</string>
+    <string name="title3_text"><![CDATA[Swipe right to mark a task \'Completed\' \n& Swipe left to delete a task]]></string>
+    <string name="title4_text"><![CDATA[Tap on a task to view the details & edit them]]>.</string>
 
     <!--Original ID-->
     <!--<string name="banner_ad_unit_id">ca-app-pub-4587610802196055/6294540600</string>-->
