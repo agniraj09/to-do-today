@@ -7,7 +7,7 @@
     <string name="no_task_message">Chill out,\nYou have no tasks to work upon!</string>
 
     <string name="task_description">Task Description</string>
-    <string name="task_description_sample">Book Tatkal Ticket To Chennai @ 11</string>
+    <string name="task_description_sample">This is sample task to check the view of this layout and the alignment</string>
     <string name="task_description_dummy">This is a task.</string>
     <string name="priority">Priority</string>
     <string name="high">High</string>
@@ -27,14 +27,15 @@
     <string name="task_time_error_empty">Task time can\'t be empty</string>
     <string name="task_time_error_invalid_time">Past time can\'t be set for one time task</string>
     <string name="time">HH:MM</string>
-    <string name="notify_before">Notify Before(mins)</string>
+    <string name="notify_before">Remind Before (Mins)</string>
     <string name="reminder_time_sample">88:88 a.m.</string>
 
     <string name="auto_delete_by_eod">Auto delete by end of the day</string>
-    <string name="set_reminder">Set Reminder</string>
+    <string name="more_options">More Options</string>
 
     <string name="add_task">Add Task</string>
     <string name="task_split_up">Task Split Up</string>
+    <string name="edit">Edit</string>
 
     <string name="total_tasks">Total Tasks</string>
     <string name="tasks_completed">Completed Tasks</string>
@@ -43,6 +44,8 @@
 
     <string name="sample_priority">Medium Priority Task</string>
     <string name="sample_date">27, September 2020 12:55 pm</string>
+    <string name="status">In Progress</string>
+    <string name="sample_rec">Daily Recurrence Task</string>
     <string name="date_created_label">Date Created</string>
     <string name="date_completed_label">Date Completed</string>
     <string name="last_occurrence_label">Last Occurrence</string>

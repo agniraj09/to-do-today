@@ -12,9 +12,9 @@ public class AppConstants {
     public static final String TITLE_UPDATE_TASK = "Update Task";
 
     public static final String RECURRENCE_NONE = "none";
-    public static final String RECURRENCE_DAILY = "daily";
-    public static final String RECURRENCE_WEEKLY = "weekly";
-    public static final String RECURRENCE_MONTHLY = "monthly";
+    public static final String RECURRENCE_DAILY = "Daily";
+    public static final String RECURRENCE_WEEKLY = "Weekly";
+    public static final String RECURRENCE_MONTHLY = "Monthly";
 
     public static final List<Integer> NOTIFY_BEFORE_TIME_IDS = Arrays.asList(R.id.five, R.id.ten, R.id.fifteen, R.id.thirty);
     public static final List<Integer> NOTIFY_BEFORE_TIME_VALUES = Arrays.asList(5, 10, 15, 30);
@@ -30,9 +30,11 @@ public class AppConstants {
     public static final List<String> PRIORITY_VALUES = Arrays.asList(PRIORITY_LOW, PRIORITY_MEDIUM, PRIORITY_HIGH);
 
     //Recurrence Map Constants
+    public static final String TASK_TIME = "task_time";
     public static final String LAST_OCCURRENCE_DATE = "last_occurrence";
     public static final String NEXT_OCCURRENCE_DATE = "next_occurrence";
 
+    public static final String PATTERN_SHORT_DATE = "dd MMM, yyyy";
     public static final String PATTERN_FULL_DATE = "dd MMM, yyyy h:mm a";
     public static final String PATTERN_TIME = "h : mm a";
 

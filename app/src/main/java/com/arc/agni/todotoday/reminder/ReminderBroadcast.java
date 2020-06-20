@@ -53,10 +53,15 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
         // Fire notification
         notificationManager.notify((int) notificationID, notification);
+
+        // Schedule next reminder
+        scheduleNextReminderIfApplicable(context, task);
     }
 
     private void scheduleNextReminderIfApplicable(Context context, Task task) {
-        buildAndScheduleNotification(context, task.getId(), task);
+        if (null != task && !task.isTaskCompleted() && task.isReminderSet()) {
+            buildAndScheduleNotification(context, task.getId(), task);
+        }
     }
 
     private static void createChannel(Context context) {

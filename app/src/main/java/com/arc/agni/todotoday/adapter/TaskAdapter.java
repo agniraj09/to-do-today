@@ -47,6 +47,7 @@ import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_DAILY;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NONE;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_WEEKLY;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ID;
+import static com.arc.agni.todotoday.constants.AppConstants.TASK_TIME;
 
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
@@ -166,47 +167,48 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             holder.taskDetailLayout.setOnClickListener(v -> {
                 BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(context);
                 View sheetView = ((Activity) context).getLayoutInflater().inflate(R.layout.task_options_bottom_sheet, null);
-                // 0. Icon
-                ((ImageView) sheetView.findViewById(R.id.priority_icon)).setImageDrawable(context.getResources().getDrawable(PRIORITY_LABELS.get(PRIORITY_VALUES.indexOf(currentTask.getPriority()))));
-                // 1. Date Created
-                ((TextView) sheetView.findViewById(R.id.date_created_value)).setText(DateHelper.formatDate(currentTask.getDateCreated(), PATTERN_FULL_DATE));
-                // 2. Date Completed
-                if (currentTask.isTaskCompleted()) {
-                    ((TextView) sheetView.findViewById(R.id.date_completed_value)).setText(DateHelper.formatDate(currentTask.getCompletedDate(), PATTERN_FULL_DATE));
-                    sheetView.findViewById(R.id.date_completed_value).setVisibility(View.VISIBLE);
-                } else {
-                    sheetView.findViewById(R.id.date_completed_value).setVisibility(View.GONE);
-                }
-                // 3. Recurrence
-                ((TextView) sheetView.findViewById(R.id.recurrence_value)).setText(currentTask.getRecurrence());
-                // 4. Occurrence Dates
-                if (!currentTask.isTaskCompleted() && !RECURRENCE_NONE.equalsIgnoreCase(currentTask.getRecurrence())) {
-                    Map<String, String> occurrences = DateHelper.calculateOccurrenceDatesFromDateCreated(currentTask);
-                    ((TextView) sheetView.findViewById(R.id.last_occurrence_value)).setText(occurrences.get(LAST_OCCURRENCE_DATE));
-                    ((TextView) sheetView.findViewById(R.id.next_occurrence_value)).setText(occurrences.get(NEXT_OCCURRENCE_DATE));
-                    sheetView.findViewById(R.id.occurence_group).setVisibility(View.VISIBLE);
-                } else {
-                    sheetView.findViewById(R.id.occurence_group).setVisibility(View.GONE);
-                }
+                Map<String, String> occurrences = DateHelper.calculateOccurrenceDatesFromDateCreated(currentTask);
 
+                // 1. Task Description
+                ((TextView) sheetView.findViewById(R.id.bs_task_description)).setText(taskDescription);
+                // 2. Task Time
+                ((TextView) sheetView.findViewById(R.id.bs_task_time)).setText(occurrences.get(TASK_TIME));
+                // 3. Date Created
+                //((TextView) sheetView.findViewById(R.id.bs_task_created_date)).setText( "Date created - " + DateHelper.formatDate(currentTask.getDateCreated(), PATTERN_FULL_DATE));
+                // 4. Priority
+                ((TextView) sheetView.findViewById(R.id.bs_task_priority)).setText(currentTask.getPriority() + " Priority");
+                // 5. Status
+                ((TextView) sheetView.findViewById(R.id.bs_task_status)).setText(currentTask.isTaskCompleted() ? "Completed" : "In Progress");
+                // 6. Recurrence
+                String recurrence = (RECURRENCE_NONE.equalsIgnoreCase(currentTask.getRecurrence()) ? "One Time Task" : (currentTask.getRecurrence() + " Recurrence"));
+                ((TextView) sheetView.findViewById(R.id.bs_recurrence_value)).setText(recurrence);
+
+                // 7. Completed Date
                 if (currentTask.isTaskCompleted()) {
-                    sheetView.findViewById(R.id.date_completed_group).setVisibility(View.VISIBLE);
+                    ((TextView) sheetView.findViewById(R.id.completed_date)).setText("Completed on " + DateHelper.formatDate(currentTask.getCompletedDate(), PATTERN_FULL_DATE));
+                    sheetView.findViewById(R.id.completed_group).setVisibility(View.VISIBLE);
                     sheetView.findViewById(R.id.edit_task).setVisibility(View.GONE);
                 } else {
-                    sheetView.findViewById(R.id.date_completed_group).setVisibility(View.GONE);
+                    sheetView.findViewById(R.id.completed_group).setVisibility(View.GONE);
                     sheetView.findViewById(R.id.edit_task).setVisibility(View.VISIBLE);
+                }
+
+                // 8. Recurrence Dates
+                if (!currentTask.isTaskCompleted() && !RECURRENCE_NONE.equalsIgnoreCase(currentTask.getRecurrence())) {
+                    ((TextView) sheetView.findViewById(R.id.last_occurrence)).setText("Last Occurrence On " + occurrences.get(LAST_OCCURRENCE_DATE));
+                    ((TextView) sheetView.findViewById(R.id.next_occurrence)).setText("Next Occurrence On " + occurrences.get(NEXT_OCCURRENCE_DATE));
+                    sheetView.findViewById(R.id.occurrence_group).setVisibility(View.VISIBLE);
+                } else {
+                    sheetView.findViewById(R.id.occurrence_group).setVisibility(View.GONE);
                 }
 
                 mBottomSheetDialog.setContentView(sheetView);
                 mBottomSheetDialog.show();
 
-                sheetView.findViewById(R.id.edit_task).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent editIntent = new Intent(context, AddNewTaskActivity.class);
-                        editIntent.putExtra(TASK_ID, currentTask.getId());
-                        context.startActivity(editIntent);
-                    }
+                sheetView.findViewById(R.id.edit_task).setOnClickListener(v1 -> {
+                    Intent editIntent = new Intent(context, AddNewTaskActivity.class);
+                    editIntent.putExtra(TASK_ID, currentTask.getId());
+                    context.startActivity(editIntent);
                 });
             });
         }

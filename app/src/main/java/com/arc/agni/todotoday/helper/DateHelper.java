@@ -11,9 +11,12 @@ import java.util.TreeMap;
 import static com.arc.agni.todotoday.constants.AppConstants.LAST_OCCURRENCE_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.NEXT_OCCURRENCE_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_FULL_DATE;
+import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_SHORT_DATE;
+import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_TIME;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_DAILY;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_MONTHLY;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_WEEKLY;
+import static com.arc.agni.todotoday.constants.AppConstants.TASK_TIME;
 
 public class DateHelper {
 
@@ -25,7 +28,10 @@ public class DateHelper {
 
         if (null != dateCreated && null != recurrence) {
             Calendar taskTime = (task.isReminderSet() ? setTaskTime(dateCreated, task.getReminderHour(), task.getReminderMinute()) : dateCreated);
+            // Task Time Value is set here
+            occurences.put(TASK_TIME, formatDate(taskTime, PATTERN_TIME));
 
+            // Last & Next Occurrence values are set here
             if (RECURRENCE_DAILY.equalsIgnoreCase(recurrence)) {
                 Calendar today = Calendar.getInstance();
                 if (today.get(Calendar.DAY_OF_YEAR) == dateCreated.get(Calendar.DAY_OF_YEAR)) {
@@ -43,7 +49,7 @@ public class DateHelper {
                         Calendar lastOccurrenceDate = Calendar.getInstance();
                         lastOccurrenceDate.add(Calendar.DAY_OF_YEAR, -1);
                         setTaskTime(lastOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
-                        occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
+                        occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
                         occurences.put(NEXT_OCCURRENCE_DATE, "Today");
                         return occurences;
                     } else {
@@ -51,7 +57,7 @@ public class DateHelper {
                         nextOccurrenceDate.add(Calendar.DAY_OF_YEAR, 1);
                         setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
                         occurences.put(LAST_OCCURRENCE_DATE, "Today");
-                        occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                        occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                         return occurences;
                     }
                 }
@@ -77,7 +83,7 @@ public class DateHelper {
                                 nextOccurrenceDate.add(Calendar.WEEK_OF_YEAR, 1);
                                 setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
                                 occurences.put(LAST_OCCURRENCE_DATE, "Today");
-                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                                 return occurences;
                             }
                         }
@@ -91,12 +97,11 @@ public class DateHelper {
 
                             Calendar nextOccurrenceDate = Calendar.getInstance();
                             nextOccurrenceDate.setTimeInMillis(lastOccurrenceDate.getTimeInMillis());
-                            nextOccurrenceDate.add(Calendar.DAY_OF_WEEK, 1);
+                            nextOccurrenceDate.add(Calendar.WEEK_OF_YEAR, 1);
                             setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
 
-                            nextOccurrenceDate.add(Calendar.WEEK_OF_YEAR, 1);
-                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
-                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
+                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                             return occurences;
                         }
                     }
@@ -112,7 +117,7 @@ public class DateHelper {
                                 Calendar lastOccurrenceDate = Calendar.getInstance();
                                 lastOccurrenceDate.add(Calendar.WEEK_OF_YEAR, -1);
                                 setTaskTime(lastOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
-                                occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
+                                occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
                                 occurences.put(NEXT_OCCURRENCE_DATE, "Today");
                                 return occurences;
                             } else {
@@ -120,7 +125,7 @@ public class DateHelper {
                                 nextOccurrenceDate.add(Calendar.WEEK_OF_YEAR, 1);
                                 setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
                                 occurences.put(LAST_OCCURRENCE_DATE, "Today");
-                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                                 return occurences;
                             }
                         }
@@ -137,8 +142,8 @@ public class DateHelper {
                             nextOccurrenceDate.add(Calendar.WEEK_OF_YEAR, 1);
                             setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
 
-                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
-                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
+                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                             return occurences;
                         }
 
@@ -154,8 +159,8 @@ public class DateHelper {
                             lastOccurrenceDate.add(Calendar.WEEK_OF_YEAR, -1);
                             setTaskTime(lastOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
 
-                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
-                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
+                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                             return occurences;
                         }
                     }
@@ -183,7 +188,7 @@ public class DateHelper {
                                 nextOccurrenceDate.add(Calendar.MONTH, 1);
                                 setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
                                 occurences.put(LAST_OCCURRENCE_DATE, "Today");
-                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                                 return occurences;
                             }
                         }
@@ -200,8 +205,8 @@ public class DateHelper {
                             nextOccurrenceDate.add(Calendar.MONTH, 1);
                             setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
 
-                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
-                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
+                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                             return occurences;
                         }
                     }
@@ -217,7 +222,7 @@ public class DateHelper {
                                 Calendar lastOccurrenceDate = Calendar.getInstance();
                                 lastOccurrenceDate.add(Calendar.MONTH, -1);
                                 setTaskTime(lastOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
-                                occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
+                                occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
                                 occurences.put(NEXT_OCCURRENCE_DATE, "Today");
                                 return occurences;
                             } else {
@@ -225,7 +230,7 @@ public class DateHelper {
                                 nextOccurrenceDate.add(Calendar.MONTH, 1);
                                 setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
                                 occurences.put(LAST_OCCURRENCE_DATE, "Today");
-                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                                occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                                 return occurences;
                             }
                         }
@@ -242,8 +247,8 @@ public class DateHelper {
                             nextOccurrenceDate.add(Calendar.MONTH, 1);
                             setTaskTime(nextOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
 
-                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
-                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
+                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                             return occurences;
                         }
 
@@ -259,8 +264,8 @@ public class DateHelper {
                             lastOccurrenceDate.add(Calendar.MONTH, -1);
                             setTaskTime(lastOccurrenceDate, taskTime.get(Calendar.HOUR_OF_DAY), taskTime.get(Calendar.MINUTE));
 
-                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_FULL_DATE));
-                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_FULL_DATE));
+                            occurences.put(LAST_OCCURRENCE_DATE, formatDate(lastOccurrenceDate, PATTERN_SHORT_DATE));
+                            occurences.put(NEXT_OCCURRENCE_DATE, formatDate(nextOccurrenceDate, PATTERN_SHORT_DATE));
                             return occurences;
                         }
                     }
@@ -272,27 +277,30 @@ public class DateHelper {
     }
 
     private static Calendar setTaskTime(Calendar date, int hour, int minute) {
-        date.set(Calendar.HOUR_OF_DAY, hour);
-        date.set(Calendar.MINUTE, minute);
-        return date;
+        Calendar taskDate = Calendar.getInstance();
+        taskDate.setTimeInMillis(date.getTimeInMillis());
+        taskDate.set(Calendar.HOUR_OF_DAY, hour);
+        taskDate.set(Calendar.MINUTE, minute);
+        return taskDate;
     }
 
     public static String formatDate(Calendar dateToCompare, String pattern) {
+        Calendar today = Calendar.getInstance();
         Calendar dateToCompareCopy = Calendar.getInstance();
         dateToCompareCopy.setTimeInMillis(dateToCompare.getTimeInMillis());
 
-        if (PATTERN_FULL_DATE.equalsIgnoreCase(pattern)) {
-            if (dateToCompareCopy.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+        if (!PATTERN_TIME.equalsIgnoreCase(pattern)) {
+            if (today.get(Calendar.DAY_OF_YEAR) == dateToCompareCopy.get(Calendar.DAY_OF_YEAR)) {
                 return "Today";
             }
 
-            dateToCompareCopy.add(Calendar.DAY_OF_YEAR, -1);
-            if (dateToCompareCopy.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+            today.add(Calendar.DAY_OF_YEAR, -1);
+            if (today.get(Calendar.DAY_OF_YEAR) == dateToCompareCopy.get(Calendar.DAY_OF_YEAR)) {
                 return "Yesterday";
             }
 
-            dateToCompareCopy.add(Calendar.DAY_OF_YEAR, 2);
-            if (dateToCompareCopy.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
+            today.add(Calendar.DAY_OF_YEAR, 2);
+            if (today.get(Calendar.DAY_OF_YEAR) == dateToCompareCopy.get(Calendar.DAY_OF_YEAR)) {
                 return "Tomorrow";
             }
         }
