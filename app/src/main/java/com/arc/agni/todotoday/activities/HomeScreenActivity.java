@@ -1,30 +1,22 @@
 package com.arc.agni.todotoday.activities;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 
 import com.arc.agni.todotoday.R;
+import com.arc.agni.todotoday.adapter.SliderPagerAdapter;
 import com.arc.agni.todotoday.adapter.TaskAdapter;
+import com.arc.agni.todotoday.helper.PrefManager;
 import com.arc.agni.todotoday.helper.SwipeToDeleteCallback;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
@@ -33,6 +25,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,33 +33,33 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
-import static com.arc.agni.todotoday.constants.AppConstants.DELETE_ALL;
 import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
-import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_ADD;
-import static com.arc.agni.todotoday.constants.AppConstants.RESULT_CODE_UPDATE;
-import static com.arc.agni.todotoday.constants.AppConstants.RESULT_MESSAGE;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_COMPLETED;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_DELETED;
-import static com.arc.agni.todotoday.constants.AppConstants.TASK_OVERVIEW;
 import static com.arc.agni.todotoday.constants.AppConstants.TEST_DEVICE_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.TITLE_TO_DO_LIST_TODAY;
 import static com.arc.agni.todotoday.constants.AppConstants.UNDO;
 
 public class HomeScreenActivity extends AppCompatActivity {
+
+    // First Time activity
+    private ViewPager viewPager;
+    private Button button;
+    private SliderPagerAdapter adapter;
+    private PrefManager prefManager;
 
     public static List<Task> taskList = new ArrayList<>();
     public TaskAdapter taskAdapter;
@@ -79,60 +72,106 @@ public class HomeScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_screen);
-        setTitle(TITLE_TO_DO_LIST_TODAY);
+        // Checking for first time launch - before calling setContentView()
+        prefManager = new PrefManager(this);
+        if (prefManager.isFirstTimeLaunch()) {
+            // making activity full screen
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().getDecorView()
+                        .setSystemUiVisibility(
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            }
+            setContentView(R.layout.activity_intro_slide);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().setStatusBarColor(ContextCompat.getColor(HomeScreenActivity.this, R.color.pure_white));
-        }
-
-        addNewButton = findViewById(R.id.addnewtask);
-        homeScreen = findViewById(R.id.homescreen_layout);
-        titleCard = findViewById(R.id.hs_title_card);
-        recyclerView = findViewById(R.id.task_list_recyclerview);
-        layoutManager = new LinearLayoutManager(HomeScreenActivity.this);
-        populateTaskList();
-        enableSwipeToDeleteAndUndo();
-
-        if (taskList.size() > 0) {
-            //placing toolbar in place of actionbar
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        }
-
-        showOrHideChilloutLayout();
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (layoutManager.findFirstVisibleItemPosition() > 0) {
-                    titleCard.setCardElevation(10.0F);
+            // bind views
+            viewPager = findViewById(R.id.pagerIntroSlider);
+            TabLayout tabLayout = findViewById(R.id.tabs);
+            button = findViewById(R.id.button);
+            // init slider pager adapter
+            adapter = new SliderPagerAdapter(getSupportFragmentManager(),
+                    FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+            // set adapter
+            viewPager.setAdapter(adapter);
+            // set dot indicators
+            tabLayout.setupWithViewPager(viewPager);
+            // make status bar transparent
+            changeStatusBarColor();
+            button.setOnClickListener(view -> {
+                if (viewPager.getCurrentItem() < adapter.getCount() - 1) {
+                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
                 } else {
-                    titleCard.setCardElevation(0.0F);
+                    launchHomeScreen();
+                }
+            });
+
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 }
 
-/*                if (dy > 0) {
-                    if (addNewButton.isShown()) addNewButton.hide();
-                } else {
-                    if (!addNewButton.isShown()) addNewButton.show();
-                }*/
+                @Override
+                public void onPageSelected(int position) {
+                    if (position == adapter.getCount() - 1) {
+                        button.setText(R.string.get_started);
+                    } else {
+                        button.setText(R.string.next);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                }
+            });
+        } else {
+            setContentView(R.layout.activity_home_screen);
+            setTitle(TITLE_TO_DO_LIST_TODAY);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                getWindow().setStatusBarColor(ContextCompat.getColor(HomeScreenActivity.this, R.color.pure_white));
             }
-        });
 
-        // INTENT EXTRA
-        if (null != getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK)) {
-            showSnackBar(getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK));
+            addNewButton = findViewById(R.id.addnewtask);
+            homeScreen = findViewById(R.id.homescreen_layout);
+            titleCard = findViewById(R.id.hs_title_card);
+            recyclerView = findViewById(R.id.task_list_recyclerview);
+            layoutManager = new LinearLayoutManager(HomeScreenActivity.this);
+            populateTaskList();
+            enableSwipeToDeleteAndUndo();
+
+            if (taskList.size() > 0) {
+                //placing toolbar in place of actionbar
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+                Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+            }
+
+            showOrHideChilloutLayout();
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (layoutManager.findFirstVisibleItemPosition() > 0) {
+                        titleCard.setCardElevation(10.0F);
+                    } else {
+                        titleCard.setCardElevation(0.0F);
+                    }
+                }
+            });
+
+            // INTENT EXTRA
+            if (null != getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK)) {
+                showSnackBar(getIntent().getStringExtra(REDIRECTED_FROM_ADD_NEW_TASK));
+            }
+
+            // Initialize MobileAds & Request for ads
+            AdView mAdView = findViewById(R.id.hs_adView);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
+            //AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
         }
-
-        // Initialize MobileAds & Request for ads
-        AdView mAdView = findViewById(R.id.hs_adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
-        //AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
     public void populateTaskList() {
@@ -268,6 +307,20 @@ public class HomeScreenActivity extends AppCompatActivity {
             findViewById(R.id.no_tasks_view).setVisibility(View.GONE);
         } else {
             findViewById(R.id.no_tasks_view).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void launchHomeScreen() {
+        prefManager.setFirstTimeLaunch(false);
+        finish();
+        startActivity(getIntent());
+    }
+
+    private void changeStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
 

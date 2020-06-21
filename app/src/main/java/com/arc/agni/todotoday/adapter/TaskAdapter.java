@@ -195,8 +195,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
                 // 8. Recurrence Dates
                 if (!currentTask.isTaskCompleted() && !RECURRENCE_NONE.equalsIgnoreCase(currentTask.getRecurrence())) {
-                    ((TextView) sheetView.findViewById(R.id.last_occurrence)).setText("Last Occurrence On " + occurrences.get(LAST_OCCURRENCE_DATE));
-                    ((TextView) sheetView.findViewById(R.id.next_occurrence)).setText("Next Occurrence On " + occurrences.get(NEXT_OCCURRENCE_DATE));
+                    ((TextView) sheetView.findViewById(R.id.last_occurrence)).setText("Last Occurrence - " + occurrences.get(LAST_OCCURRENCE_DATE));
+                    ((TextView) sheetView.findViewById(R.id.next_occurrence)).setText("Next Occurrence - " + occurrences.get(NEXT_OCCURRENCE_DATE));
                     sheetView.findViewById(R.id.occurrence_group).setVisibility(View.VISIBLE);
                 } else {
                     sheetView.findViewById(R.id.occurrence_group).setVisibility(View.GONE);
