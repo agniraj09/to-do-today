@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.arc.agni.todotoday.constants.AppConstants.LAST_OCCURRENCE_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.NEXT_OCCURRENCE_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_FULL_DATE;
+import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_SHORT_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_BACKGROUND;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LABELS;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
@@ -174,7 +175,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 // 2. Task Time
                 ((TextView) sheetView.findViewById(R.id.bs_task_time)).setText(occurrences.get(TASK_TIME));
                 // 3. Date Created
-                //((TextView) sheetView.findViewById(R.id.bs_task_created_date)).setText( "Date created - " + DateHelper.formatDate(currentTask.getDateCreated(), PATTERN_FULL_DATE));
+                ((TextView) sheetView.findViewById(R.id.bs_date_created)).setText( "Date created - " + DateHelper.formatDate(currentTask.getDateCreated(), PATTERN_SHORT_DATE));
                 // 4. Priority
                 ((TextView) sheetView.findViewById(R.id.bs_task_priority)).setText(currentTask.getPriority() + " Priority");
                 // 5. Status

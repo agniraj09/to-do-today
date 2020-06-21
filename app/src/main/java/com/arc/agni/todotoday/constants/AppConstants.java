@@ -16,8 +16,15 @@ public class AppConstants {
     public static final String RECURRENCE_WEEKLY = "Weekly";
     public static final String RECURRENCE_MONTHLY = "Monthly";
 
+    public static final String REMINDER_TYPE_NOTIFICATION = "notification";
+    public static final String REMINDER_TYPE_ALARM = "alarm";
+    public static final List<Integer> REMINDER_TYPE_IDS = Arrays.asList(R.id.notification, R.id.alarm);
+    public static final List<String> REMINDER_TYPE_VALUES = Arrays.asList(REMINDER_TYPE_NOTIFICATION, REMINDER_TYPE_ALARM);
+
+
     public static final List<Integer> NOTIFY_BEFORE_TIME_IDS = Arrays.asList(R.id.five, R.id.ten, R.id.fifteen, R.id.thirty);
     public static final List<Integer> NOTIFY_BEFORE_TIME_VALUES = Arrays.asList(5, 10, 15, 30);
+
     public static final List<Integer> RECURRENCE_IDS = Arrays.asList(R.id.none, R.id.daily, R.id.weekly, R.id.monthly);
     public static final List<String> RECURRENCE_VALUES = Arrays.asList(RECURRENCE_NONE, RECURRENCE_DAILY, RECURRENCE_WEEKLY, RECURRENCE_MONTHLY);
     public static final List<String> RECURRENCE_NOTIFICATION_TEXT = Arrays.asList("One time task", "Daily Task", "Weekly Task", "Monthly Task");
@@ -79,6 +86,9 @@ public class AppConstants {
     public static final String INTENT_EXTRA_NOTIFICATION_ID = "notification_id";
     public static final String INTENT_EXTRA_TASK_RECURRENCE = "task_recurrence";
     public static final String INTENT_EXTRA_TASK = "task";
+    public static final String INTENT_EXTRA_TASK_DESCRIPTION  = "task_description";
+    public static final String INTENT_EXTRA_TASK_PRIORITY  = "task_priority";
+    public static final String INTENT_EXTRA_TASK_TIME  = "task_time";
 
     public static final String TEST_DEVICE_ID = "0EC56B91253E874AAF286CEDC3945F6A";
     public static String ADMOB_APP_ID = "ca-app-pub-4587610802196055~5991767207";

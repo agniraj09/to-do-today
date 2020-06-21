@@ -20,13 +20,14 @@ public class Task implements Serializable, Parcelable {
     private int reminderHour;
     private int reminderMinute;
     private int remindBefore;
+    private String reminderType;
     private boolean isTaskCompleted;
     private Calendar completedDate;
 
     public Task() {
     }
 
-    public Task(String description, String priority, String recurrence, boolean autoDeleteByEOD, Calendar dateCreated, boolean isReminderSet, int reminderHour, int reminderMinute, int remindBefore, boolean isTaskCompleted) {
+    public Task(String description, String priority, String recurrence, boolean autoDeleteByEOD, Calendar dateCreated, boolean isReminderSet, int reminderHour, int reminderMinute, int remindBefore, String reminderType, boolean isTaskCompleted) {
         this.description = description;
         this.priority = priority;
         this.recurrence = recurrence;
@@ -36,8 +37,10 @@ public class Task implements Serializable, Parcelable {
         this.reminderHour = reminderHour;
         this.reminderMinute = reminderMinute;
         this.remindBefore = remindBefore;
+        this.reminderType = reminderType;
         this.isTaskCompleted = isTaskCompleted;
     }
+
 
     protected Task(Parcel in) {
         id = in.readLong();
@@ -49,6 +52,7 @@ public class Task implements Serializable, Parcelable {
         reminderHour = in.readInt();
         reminderMinute = in.readInt();
         remindBefore = in.readInt();
+        reminderType = in.readString();
         isTaskCompleted = in.readByte() != 0;
     }
 
@@ -144,6 +148,14 @@ public class Task implements Serializable, Parcelable {
         this.remindBefore = remindBefore;
     }
 
+    public String getReminderType() {
+        return reminderType;
+    }
+
+    public void setReminderType(String reminderType) {
+        this.reminderType = reminderType;
+    }
+
     public boolean isTaskCompleted() {
         return isTaskCompleted;
     }
@@ -188,14 +200,12 @@ public class Task implements Serializable, Parcelable {
                 ", reminderHour=" + reminderHour +
                 ", reminderMinute=" + reminderMinute +
                 ", remindBefore=" + remindBefore +
+                ", reminderType='" + reminderType + '\'' +
                 ", isTaskCompleted=" + isTaskCompleted +
-                ", lastCycleDate=" + completedDate +
+                ", completedDate=" + completedDate +
                 '}';
     }
 
-    /**
-     * Parcelable implementations
-     */
     @Override
     public int describeContents() {
         return 0;
@@ -212,7 +222,7 @@ public class Task implements Serializable, Parcelable {
         dest.writeInt(reminderHour);
         dest.writeInt(reminderMinute);
         dest.writeInt(remindBefore);
+        dest.writeString(reminderType);
         dest.writeByte((byte) (isTaskCompleted ? 1 : 0));
     }
-
 }

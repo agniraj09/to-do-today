@@ -1,9 +1,11 @@
 package com.arc.agni.todotoday.activities;
 
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -11,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.helper.DateHelper;
@@ -22,6 +25,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -43,6 +47,8 @@ import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_IDS;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NONE;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
+import static com.arc.agni.todotoday.constants.AppConstants.REMINDER_TYPE_IDS;
+import static com.arc.agni.todotoday.constants.AppConstants.REMINDER_TYPE_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.SAVE;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ADDED;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ID;
@@ -61,6 +67,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     TextView highPriority;
     CheckBox isSetReminderChecked;
     boolean notifyBeforeEnabled;
+    String reminderType;
     EditText taskTime;
     int taskTimeHour;
     int taskTimeMinute;
@@ -113,12 +120,44 @@ public class AddNewTaskActivity extends AppCompatActivity {
             }
         });
 
+/*        taskDescriptionValue.setOnClickListener(v -> {
+
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Need to speak");
+            try {
+                startActivityForResult(intent, 1);
+            } catch (ActivityNotFoundException a) {
+                Toast.makeText(getApplicationContext(),
+                        "Sorry your device not supported",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        });*/
+
         // Initialize MobileAds & Request for ads
         AdView mAdView = findViewById(R.id.ant_adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
         //AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
+
+/*    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    taskDescriptionValue.getEditText().setText(String.valueOf(result.get(0)));
+                }
+                break;
+            }
+        }
+    }*/
 
     /**
      * Priority Selection Method.
@@ -182,6 +221,19 @@ public class AddNewTaskActivity extends AppCompatActivity {
         recurrenceType = RECURRENCE_VALUES.get(RECURRENCE_IDS.indexOf(view.getId()));
         autoDeleteCheckBox.setVisibility(RECURRENCE_NONE.equalsIgnoreCase(recurrenceType) ? View.VISIBLE : View.GONE);
         resetReminderOptionsLayout();
+    }
+
+    public void selectReminderType(View view) {
+        for (int id : REMINDER_TYPE_IDS) {
+            if (view.getId() == id) {
+                findViewById(id).setBackgroundResource(R.drawable.ic_priority_low);
+                ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_white));
+            } else {
+                findViewById(id).setBackgroundResource(R.drawable.ic_priority_no);
+                ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_black));
+            }
+        }
+        reminderType = REMINDER_TYPE_VALUES.get(REMINDER_TYPE_IDS.indexOf(view.getId()));
     }
 
     /**
@@ -322,6 +374,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
             if (task.getRemindBefore() != 0) {
                 notifyBeforeOptionLayout.setVisibility(View.VISIBLE);
                 selectNotifyBeforeTime(findViewById(NOTIFY_BEFORE_TIME_IDS.get(NOTIFY_BEFORE_TIME_VALUES.indexOf(task.getRemindBefore()))));
+                selectReminderType(findViewById(REMINDER_TYPE_IDS.get(REMINDER_TYPE_VALUES.indexOf(task.getReminderType()))));
             }
         }
 
@@ -348,6 +401,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         findViewById(R.id.task_time_error).setVisibility(View.GONE);
 
         // 2. Reset task time layout
+        autoDeleteCheckBox.setChecked(false);
         taskTime.setBackgroundResource(R.drawable.ic_edittext_box);
         taskTime.setTextColor(getResources().getColor(R.color.pure_black));
         taskTime.setText("");
@@ -388,7 +442,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 && checkIfNotifyBeforeMinuteIsValid(taskTimeHour, taskTimeMinute, notifyBeforeMinutes)))) {
             boolean isAutoDeleteChecked = autoDeleteCheckBox.isChecked();
             Calendar dateCreated = (isItAnUpdateTask ? TaskHelper.getTask(this, taskID).getDateCreated() : Calendar.getInstance());
-            Task task = new Task(description, priority, recurrenceType, isAutoDeleteChecked, dateCreated, isSetReminderChecked.isChecked(), taskTimeHour, taskTimeMinute, notifyBeforeMinutes, false);
+            Task task = new Task(description, priority, recurrenceType, isAutoDeleteChecked, dateCreated, isSetReminderChecked.isChecked(), taskTimeHour, taskTimeMinute, notifyBeforeMinutes, reminderType, false);
             taskID = TaskHelper.addTaskToDatabase(this, taskID, task);
 
             Intent backToHome = new Intent(this, HomeScreenActivity.class);

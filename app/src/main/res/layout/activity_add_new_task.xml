@@ -401,7 +401,6 @@
                             android:id="@+id/thirty"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginLeft="4dp"
                             android:layout_marginRight="8dp"
@@ -415,11 +414,66 @@
                             android:text="@string/thirty"
                             android:textAlignment="center"
                             android:textColor="@color/pure_black"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toEndOf="@+id/fifteen"
                             app:layout_constraintTop_toBottomOf="@+id/notify_before_label" />
+
+                        <TextView
+                            android:id="@+id/reminder_type_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="24dp"
+                            android:text="@string/reminder_type"
+                            android:textColor="@color/pure_black"
+                            android:textSize="@dimen/label_size"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.502"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/thirty" />
+
+                        <TextView
+                            android:id="@+id/notification"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/ic_priority_low"
+                            android:elevation="5dp"
+                            android:gravity="center_horizontal"
+                            android:onClick="selectReminderType"
+                            android:padding="5dp"
+                            android:text="@string/notification"
+                            android:textAlignment="center"
+                            android:textColor="@color/pure_white"
+                            app:layout_constraintEnd_toStartOf="@+id/alarm"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/reminder_type_label" />
+
+                        <TextView
+                            android:id="@+id/alarm"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginRight="16dp"
+                            android:background="@drawable/ic_priority_no"
+                            android:elevation="5dp"
+                            android:gravity="center_horizontal"
+                            android:onClick="selectReminderType"
+                            android:padding="5dp"
+                            android:text="@string/alarm"
+                            android:textAlignment="center"
+                            android:textColor="@color/pure_black"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/notification"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/notification" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

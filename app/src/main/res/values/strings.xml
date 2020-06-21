@@ -28,6 +28,9 @@
     <string name="task_time_error_invalid_time">Past time can\'t be set for one time task</string>
     <string name="time">HH:MM</string>
     <string name="notify_before">Remind Before (Mins)</string>
+    <string name="reminder_type">Reminder Type</string>
+    <string name="alarm">Alarm</string>
+    <string name="notification">Notification</string>
     <string name="reminder_time_sample">88:88 a.m.</string>
 
     <string name="auto_delete_by_eod">Auto delete by end of the day</string>
@@ -36,6 +39,7 @@
     <string name="add_task">Add Task</string>
     <string name="task_split_up">Task Split Up</string>
     <string name="edit">Edit</string>
+    <string name="stop_alarm">Stop Alarm</string>
 
     <string name="total_tasks">Total Tasks</string>
     <string name="tasks_completed">Completed Tasks</string>

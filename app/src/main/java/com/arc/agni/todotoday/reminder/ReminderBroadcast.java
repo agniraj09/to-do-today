@@ -18,8 +18,10 @@ import android.util.Log;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.activities.HomeScreenActivity;
+import com.arc.agni.todotoday.helper.DateHelper;
 import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
+import com.arc.agni.todotoday.service.NotificationMusicService;
 
 import java.util.Calendar;
 
@@ -31,8 +33,11 @@ import static com.arc.agni.todotoday.constants.AppConstants.CHANNEL_NAME;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFICATION;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFICATION_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_DESCRIPTION;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_RECURRENCE;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_TIME;
 import static com.arc.agni.todotoday.constants.AppConstants.NOTIFICATION_TEXT;
+import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_TIME;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_COLORS;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_DAILY;
@@ -41,6 +46,7 @@ import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NONE;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NOTIFICATION_TEXT;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_WEEKLY;
+import static com.arc.agni.todotoday.constants.AppConstants.REMINDER_TYPE_ALARM;
 
 public class ReminderBroadcast extends BroadcastReceiver {
 
@@ -51,8 +57,15 @@ public class ReminderBroadcast extends BroadcastReceiver {
         long notificationID = intent.getLongExtra(INTENT_EXTRA_NOTIFICATION_ID, 0);
         Task task = intent.getParcelableExtra(INTENT_EXTRA_TASK);
 
-        // Fire notification
-        notificationManager.notify((int) notificationID, notification);
+        // Start alarm music for on booking day(actual) notifications
+        if (REMINDER_TYPE_ALARM.equalsIgnoreCase(task.getReminderType())) {
+            Intent alarmScreenIntent = new Intent(context, NotificationMusicService.class);
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK, (Parcelable) task);
+            context.startService(alarmScreenIntent);
+        } else {
+            // Fire notification
+            notificationManager.notify((int) notificationID, notification);
+        }
 
         // Schedule next reminder
         scheduleNextReminderIfApplicable(context, task);
