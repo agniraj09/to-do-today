@@ -48,6 +48,7 @@ import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NONE;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.REMINDER_TYPE_IDS;
+import static com.arc.agni.todotoday.constants.AppConstants.REMINDER_TYPE_NOTIFICATION;
 import static com.arc.agni.todotoday.constants.AppConstants.REMINDER_TYPE_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.SAVE;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ADDED;
@@ -67,7 +68,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     TextView highPriority;
     CheckBox isSetReminderChecked;
     boolean notifyBeforeEnabled;
-    String reminderType;
+    String reminderType= REMINDER_TYPE_NOTIFICATION;
     EditText taskTime;
     int taskTimeHour;
     int taskTimeMinute;
@@ -171,9 +172,11 @@ public class AddNewTaskActivity extends AppCompatActivity {
             if (priorityID == view.getId()) {
                 findViewById(priorityID).setBackgroundResource(PRIORITY_BACKGROUND.get(PRIORITY_IDS.indexOf(priorityID)));
                 ((TextView) findViewById(priorityID)).setTextColor(getResources().getColor(R.color.pure_white));
+                setElevation(true, priorityID);
             } else {
                 findViewById(priorityID).setBackgroundResource(R.drawable.ic_priority_no);
                 ((TextView) findViewById(priorityID)).setTextColor(getResources().getColor(R.color.pure_black));
+                setElevation(false, priorityID);
             }
         }
         priority = PRIORITY_VALUES.get(PRIORITY_IDS.indexOf(view.getId()));
@@ -191,9 +194,11 @@ public class AddNewTaskActivity extends AppCompatActivity {
             if (view.getId() == id) {
                 findViewById(id).setBackgroundResource(R.drawable.ic_priority_low);
                 ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_white));
+                setElevation(true, id);
             } else {
                 findViewById(id).setBackgroundResource(R.drawable.ic_priority_no);
                 ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_black));
+                setElevation(false, id);
             }
         }
         notifyBeforeMinutes = NOTIFY_BEFORE_TIME_VALUES.get(NOTIFY_BEFORE_TIME_IDS.indexOf(view.getId()));
@@ -213,9 +218,11 @@ public class AddNewTaskActivity extends AppCompatActivity {
             if (view.getId() == id) {
                 findViewById(id).setBackgroundResource(R.drawable.ic_priority_low);
                 ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_white));
+                setElevation(true, id);
             } else {
                 findViewById(id).setBackgroundResource(R.drawable.ic_priority_no);
                 ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_black));
+                setElevation(false, id);
             }
         }
         recurrenceType = RECURRENCE_VALUES.get(RECURRENCE_IDS.indexOf(view.getId()));
@@ -228,12 +235,20 @@ public class AddNewTaskActivity extends AppCompatActivity {
             if (view.getId() == id) {
                 findViewById(id).setBackgroundResource(R.drawable.ic_priority_low);
                 ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_white));
+                setElevation(true, id);
             } else {
                 findViewById(id).setBackgroundResource(R.drawable.ic_priority_no);
                 ((TextView) findViewById(id)).setTextColor(getResources().getColor(R.color.pure_black));
+                setElevation(false, id);
             }
         }
         reminderType = REMINDER_TYPE_VALUES.get(REMINDER_TYPE_IDS.indexOf(view.getId()));
+    }
+
+    private void setElevation(boolean set, int viewID) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            findViewById(viewID).setElevation(set ? 5.0F : 0.0F);
+        }
     }
 
     /**

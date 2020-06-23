@@ -51,8 +51,8 @@ public class AlarmScreenActivity extends AppCompatActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
         }
 
-        findViewById(R.id.alarm_screen).setBackgroundColor(PRIORITY_COLORS.get(PRIORITY_VALUES.indexOf(getIntent().getStringExtra(INTENT_EXTRA_TASK_PRIORITY))));
-        ((TextView) findViewById(R.id.as_task_description)).setText(getIntent().getStringExtra(INTENT_EXTRA_TASK_DESCRIPTION));
+        findViewById(R.id.alarm_screen).setBackgroundColor(getResources().getColor(PRIORITY_COLORS.get(PRIORITY_VALUES.indexOf(getIntent().getStringExtra(INTENT_EXTRA_TASK_PRIORITY)))));
+        ((TextView) findViewById(R.id.as_task_description_value)).setText(getIntent().getStringExtra(INTENT_EXTRA_TASK_DESCRIPTION));
         ((TextView) findViewById(R.id.as_task_time)).setText(getIntent().getStringExtra(INTENT_EXTRA_TASK_TIME));
 
         findViewById(R.id.stop_alarm).setOnClickListener(v -> {

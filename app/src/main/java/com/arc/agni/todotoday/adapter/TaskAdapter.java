@@ -172,10 +172,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
                 // 1. Task Description
                 ((TextView) sheetView.findViewById(R.id.bs_task_description)).setText(taskDescription);
+                // 1.1 Reminder Icon
+                sheetView.findViewById(R.id.reminder_icon).setVisibility(currentTask.isReminderSet() ? View.VISIBLE : View.GONE);
                 // 2. Task Time
                 ((TextView) sheetView.findViewById(R.id.bs_task_time)).setText(occurrences.get(TASK_TIME));
                 // 3. Date Created
-                ((TextView) sheetView.findViewById(R.id.bs_date_created)).setText( "Date created - " + DateHelper.formatDate(currentTask.getDateCreated(), PATTERN_SHORT_DATE));
+                ((TextView) sheetView.findViewById(R.id.bs_date_created)).setText("Date created - " + DateHelper.formatDate(currentTask.getDateCreated(), PATTERN_SHORT_DATE));
                 // 4. Priority
                 ((TextView) sheetView.findViewById(R.id.bs_task_priority)).setText(currentTask.getPriority() + " Priority");
                 // 5. Status
@@ -215,93 +217,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         }
 
     }
-
-    /*public String formatTaskTime(Task task) {
-        String formattedTaskTime = "";
-
-        Calendar currentDay = Calendar.getInstance();
-        int currentDayDate = currentDay.get(Calendar.DAY_OF_YEAR);
-        int currentDayMonth = currentDay.get(Calendar.MONTH);
-
-        Calendar dateCreated = Calendar.getInstance();
-        dateCreated.setTime(task.getDateCreated());
-        if (RECURRENCE_NONE.equalsIgnoreCase(task.getRecurrence())) {
-            if (dateCreated.get(Calendar.DAY_OF_YEAR) < currentDayDate && dateCreated.get(Calendar.MONTH) < currentDayMonth) {
-                formattedTaskTime = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(dateCreated.getTime());
-            } else {
-                Calendar reminderTime = Calendar.getInstance();
-                reminderTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
-                reminderTime.set(Calendar.MINUTE, task.getReminderMinute());
-                reminderTime.add(Calendar.MINUTE, -task.getRemindBefore());
-                formattedTaskTime = new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(reminderTime.getTime());
-            }
-        } else {
-            if (task.isTaskCompleted()) {
-                if (null != task.getLastCycleDate()) {
-                    formattedTaskTime = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(task.getLastCycleDate().getTime());
-                } else {
-                    formattedTaskTime = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(dateCreated.getTime());
-                }
-            } else {
-                Date timeToBeConsidered = (null != task.getLastCycleDate() ? task.getLastCycleDate() : task.getDateCreated());
-                Log.e("inside non-comp", "inside not completed");
-                if (RECURRENCE_DAILY.equalsIgnoreCase(task.getRecurrence())) {
-                    Calendar nextCycle = Calendar.getInstance();
-                    nextCycle.setTime(timeToBeConsidered);
-                    nextCycle.add(Calendar.DAY_OF_YEAR, 1);
-
-                    Log.e("inside daily", "next cycle" + nextCycle.get(Calendar.DAY_OF_YEAR) + "/" + nextCycle.get(Calendar.MONTH) + " | " + "currntDay" + currentDayDate + "/" + currentDayMonth);
-                    if (nextCycle.get(Calendar.DAY_OF_YEAR) > currentDayDate && nextCycle.get(Calendar.MONTH) >= currentDayMonth) {
-                        Log.e("inside ***", "");
-                        formattedTaskTime = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(nextCycle.getTime());
-                    } else {
-                        Calendar reminderTime = Calendar.getInstance();
-                        reminderTime.setTime(nextCycle.getTime());
-                        reminderTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
-                        reminderTime.set(Calendar.MINUTE, task.getReminderMinute());
-                        reminderTime.add(Calendar.MINUTE, -task.getRemindBefore());
-                        formattedTaskTime = new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(nextCycle.getTime());
-                    }
-
-                } else if (RECURRENCE_WEEKLY.equalsIgnoreCase(task.getRecurrence())) {
-                    Calendar nextCycle = Calendar.getInstance();
-                    nextCycle.setTime(timeToBeConsidered);
-                    nextCycle.add(Calendar.WEEK_OF_YEAR, 1);
-
-                    if (nextCycle.get(Calendar.DAY_OF_YEAR) > currentDayDate && nextCycle.get(Calendar.MONTH) >= currentDayMonth) {
-                        formattedTaskTime = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(nextCycle.getTime());
-                    } else {
-                        Calendar reminderTime = Calendar.getInstance();
-                        reminderTime.setTime(nextCycle.getTime());
-                        reminderTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
-                        reminderTime.set(Calendar.MINUTE, task.getReminderMinute());
-                        reminderTime.add(Calendar.MINUTE, -task.getRemindBefore());
-
-                        formattedTaskTime = new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(nextCycle.getTime());
-                    }
-                } else {
-                    Calendar nextCycle = Calendar.getInstance();
-                    nextCycle.setTime(timeToBeConsidered);
-                    nextCycle.add(Calendar.MONTH, 1);
-
-                    if (nextCycle.get(Calendar.DAY_OF_YEAR) > currentDayDate && nextCycle.get(Calendar.MONTH) > currentDayMonth) {
-                        formattedTaskTime = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH).format(nextCycle.getTime());
-                    } else {
-                        Calendar reminderTime = Calendar.getInstance();
-                        reminderTime.setTime(nextCycle.getTime());
-                        reminderTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
-                        reminderTime.set(Calendar.MINUTE, task.getReminderMinute());
-                        reminderTime.add(Calendar.MINUTE, -task.getRemindBefore());
-                        formattedTaskTime = new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(nextCycle.getTime());
-                    }
-                }
-
-            }
-        }
-
-        return formattedTaskTime;
-    }*/
-
 
     @Override
     public int getItemCount() {

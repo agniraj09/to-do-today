@@ -72,7 +72,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
     }
 
     private void scheduleNextReminderIfApplicable(Context context, Task task) {
-        if (null != task && !task.isTaskCompleted() && task.isReminderSet()) {
+        if (null != task && !task.isTaskCompleted() && !RECURRENCE_NONE.equalsIgnoreCase(task.getRecurrence()) && task.isReminderSet()) {
             buildAndScheduleNotification(context, task.getId(), task);
         }
     }
@@ -83,6 +83,8 @@ public class ReminderBroadcast extends BroadcastReceiver {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
             notificationChannel.setLightColor(Color.GREEN);
+            notificationChannel.setShowBadge(true);
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             notificationChannel.setDescription(CHANNEL_DESCRIPTION);
             notificationManager.createNotificationChannel(notificationChannel);
         }
@@ -142,7 +144,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         createChannel(context);
 
         // Create notification with passed text
-        Notification notification = createNotification(task, context, homeScreenPendingIntent, taskID);
+        Notification notification = createNotification(task, context, homeScreenPendingIntent);
 
         // Create Intent with extra to pass to BroadcastReceiver
         Intent notificationIntent = new Intent(context, ReminderBroadcast.class);
@@ -161,22 +163,24 @@ public class ReminderBroadcast extends BroadcastReceiver {
         }
     }
 
-    private static Notification createNotification(Task task, Context context, PendingIntent homeScreenPendingIntent, long taskID) {
+    private static Notification createNotification(Task task, Context context, PendingIntent homeScreenPendingIntent) {
 
-        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+/*        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
         bigText.bigText(task.getDescription());
-        bigText.setSummaryText(RECURRENCE_NOTIFICATION_TEXT.get(RECURRENCE_VALUES.indexOf(task.getRecurrence())));
+        bigText.setSummaryText(RECURRENCE_NOTIFICATION_TEXT.get(RECURRENCE_VALUES.indexOf(task.getRecurrence())));*/
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setAutoCancel(true)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_label_plain))
                 .setSmallIcon(R.drawable.ic_label_plain)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_label_plain))
                 .setColor(context.getResources().getColor(PRIORITY_COLORS.get(PRIORITY_VALUES.indexOf(task.getPriority()))))
                 .setContentTitle("It's Task Time")
-                //.setContentText(NOTIFICATION_TEXT)
-                //.setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(bigText)
+                //.setContentText(RECURRENCE_NOTIFICATION_TEXT.get(RECURRENCE_VALUES.indexOf(task.getRecurrence())))
+                .setContentText(task.getDescription())
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(task.getDescription()))
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(homeScreenPendingIntent);
         return builder.build();

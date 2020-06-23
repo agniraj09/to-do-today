@@ -35,39 +35,52 @@
             android:text="@string/task_description_sample"
             android:textSize="25sp" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/bs_date_created"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_weight="1"
                 android:paddingBottom="4dp"
                 android:paddingLeft="4dp"
                 android:paddingStart="4dp"
                 android:text="@string/sample_date"
                 android:textAlignment="viewStart"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/reminder_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:paddingEnd="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="4dp"
+                android:src="@drawable/ic_notification_icon"
+                app:layout_constraintEnd_toStartOf="@+id/bs_task_time"
+                app:layout_constraintStart_toEndOf="@+id/bs_date_created"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/bs_task_time"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_weight="1"
                 android:paddingBottom="4dp"
                 android:paddingEnd="4dp"
                 android:paddingRight="4dp"
                 android:text="@string/task_time_with_a"
-                android:textAlignment="viewEnd"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

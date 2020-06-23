@@ -48,8 +48,7 @@
         <receiver android:name=".reminder.ReminderBroadcast" />
         <service
             android:name=".service.NotificationMusicService"
-            android:enabled="true"
-            android:exported="true"/>
+            android:enabled="true" />
     </application>
 
 </manifest>
