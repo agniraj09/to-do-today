@@ -54,7 +54,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = intent.getParcelableExtra(INTENT_EXTRA_NOTIFICATION);
-        long notificationID = intent.getLongExtra(INTENT_EXTRA_NOTIFICATION_ID, 0);
+        int notificationID = intent.getIntExtra(INTENT_EXTRA_NOTIFICATION_ID, 0);
         Task task = intent.getParcelableExtra(INTENT_EXTRA_TASK);
 
         // Start alarm music for on booking day(actual) notifications
@@ -64,7 +64,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
             context.startService(alarmScreenIntent);
         } else {
             // Fire notification
-            notificationManager.notify((int) notificationID, notification);
+            notificationManager.notify(notificationID, notification);
         }
 
         // Schedule next reminder
@@ -150,7 +150,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, ReminderBroadcast.class);
         notificationIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         notificationIntent.putExtra(INTENT_EXTRA_NOTIFICATION, notification);
-        notificationIntent.putExtra(INTENT_EXTRA_NOTIFICATION_ID, taskID);
+        notificationIntent.putExtra(INTENT_EXTRA_NOTIFICATION_ID, (int) taskID);
         notificationIntent.putExtra(INTENT_EXTRA_TASK, (Parcelable) task);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) taskID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -170,6 +170,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         bigText.setSummaryText(RECURRENCE_NOTIFICATION_TEXT.get(RECURRENCE_VALUES.indexOf(task.getRecurrence())));*/
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setChannelId(CHANNEL_ID)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_label_plain)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_label_plain))

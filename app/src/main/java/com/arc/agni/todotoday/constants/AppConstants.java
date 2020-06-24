@@ -78,9 +78,9 @@ public class AppConstants {
     public static final String TASK_UPDATED = "Task has been updated successfully";
 
     // Push Notification Constants
-    public static final String CHANNEL_ID = "ToDoListToday";
-    public static final String CHANNEL_NAME = "ToDoListToday Reminder Channel";
-    public static final String CHANNEL_DESCRIPTION = "This is a channel to shoot notifications for ToDoListToday App";
+    public static final String CHANNEL_ID = "ToDoList_Channel_ID";
+    public static final String CHANNEL_NAME = "ToDoList_Channel_Name";
+    public static final String CHANNEL_DESCRIPTION = "ToDoList_Channel_Description";
     public static final String NOTIFICATION_TEXT = "Task is scheduled";
     public static final String INTENT_EXTRA_NOTIFICATION = "notification";
     public static final String INTENT_EXTRA_NOTIFICATION_ID = "notification_id";
