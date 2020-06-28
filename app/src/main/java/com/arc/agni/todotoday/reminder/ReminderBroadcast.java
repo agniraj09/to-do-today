@@ -8,24 +8,20 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
-import android.os.Parcelable;
-import android.util.Log;
+import android.os.Bundle;
+
+import androidx.core.app.NotificationCompat;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.activities.HomeScreenActivity;
-import com.arc.agni.todotoday.helper.DateHelper;
-import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 import com.arc.agni.todotoday.service.NotificationMusicService;
 
 import java.util.Calendar;
-
-import androidx.core.app.NotificationCompat;
 
 import static com.arc.agni.todotoday.constants.AppConstants.CHANNEL_DESCRIPTION;
 import static com.arc.agni.todotoday.constants.AppConstants.CHANNEL_ID;
@@ -33,18 +29,12 @@ import static com.arc.agni.todotoday.constants.AppConstants.CHANNEL_NAME;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFICATION;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFICATION_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK;
-import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_DESCRIPTION;
-import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_RECURRENCE;
-import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_TIME;
-import static com.arc.agni.todotoday.constants.AppConstants.NOTIFICATION_TEXT;
-import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_TIME;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_BUNDLE;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_COLORS;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_DAILY;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_MONTHLY;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NONE;
-import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NOTIFICATION_TEXT;
-import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_WEEKLY;
 import static com.arc.agni.todotoday.constants.AppConstants.REMINDER_TYPE_ALARM;
 
@@ -55,12 +45,13 @@ public class ReminderBroadcast extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = intent.getParcelableExtra(INTENT_EXTRA_NOTIFICATION);
         int notificationID = intent.getIntExtra(INTENT_EXTRA_NOTIFICATION_ID, 0);
-        Task task = intent.getParcelableExtra(INTENT_EXTRA_TASK);
+        Bundle bundle = intent.getBundleExtra(INTENT_EXTRA_TASK_BUNDLE);
+        Task task = bundle.getParcelable(INTENT_EXTRA_TASK);
 
         // Start alarm music for on booking day(actual) notifications
         if (REMINDER_TYPE_ALARM.equalsIgnoreCase(task.getReminderType())) {
             Intent alarmScreenIntent = new Intent(context, NotificationMusicService.class);
-            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK, (Parcelable) task);
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_BUNDLE, bundle);
             context.startService(alarmScreenIntent);
         } else {
             // Fire notification
@@ -151,7 +142,9 @@ public class ReminderBroadcast extends BroadcastReceiver {
         notificationIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         notificationIntent.putExtra(INTENT_EXTRA_NOTIFICATION, notification);
         notificationIntent.putExtra(INTENT_EXTRA_NOTIFICATION_ID, (int) taskID);
-        notificationIntent.putExtra(INTENT_EXTRA_TASK, (Parcelable) task);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(INTENT_EXTRA_TASK, task);
+        notificationIntent.putExtra(INTENT_EXTRA_TASK_BUNDLE, bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) taskID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Scheduling the notification

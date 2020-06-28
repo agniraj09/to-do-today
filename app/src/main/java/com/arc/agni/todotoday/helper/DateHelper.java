@@ -10,7 +10,6 @@ import java.util.TreeMap;
 
 import static com.arc.agni.todotoday.constants.AppConstants.LAST_OCCURRENCE_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.NEXT_OCCURRENCE_DATE;
-import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_FULL_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_SHORT_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_TIME;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_DAILY;

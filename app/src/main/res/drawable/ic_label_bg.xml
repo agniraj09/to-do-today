@@ -4,7 +4,11 @@
     android:shape="rectangle">
     <corners android:radius="5dp" />
     <solid android:color="#ABEFEEEE" />
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/cardview_shadow_start_color" />
   <!--  <stroke
+  #ABEFEEEE
         android:width="1.5dp"
         android:color="@color/light_gray" />-->
 </shape>

@@ -82,7 +82,6 @@ public class SliderItemFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // set page background
-        //view.setBackground(requireActivity().getDrawable(BG_IMAGE[position]));
         view.setBackgroundColor(requireActivity().getResources().getColor(BG_IMAGE[position]));
         TextView title = view.findViewById(R.id.textView);
         TextView titleText = view.findViewById(R.id.textView2);

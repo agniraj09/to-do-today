@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 
 import com.arc.agni.todotoday.activities.AlarmScreenActivity;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_BUNDLE;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_DESCRIPTION;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_PRIORITY;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_TIME;
@@ -72,7 +74,8 @@ public class NotificationMusicService extends Service {
         player.start();
 
         Intent alarmScreenIntent = new Intent(this, AlarmScreenActivity.class);
-        Task task = intent.getParcelableExtra(INTENT_EXTRA_TASK);
+        Bundle bundle = intent.getBundleExtra(INTENT_EXTRA_TASK_BUNDLE);
+        Task task = bundle.getParcelable(INTENT_EXTRA_TASK);
         alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_DESCRIPTION, task.getDescription());
         Calendar taskTime = Calendar.getInstance();
         taskTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());

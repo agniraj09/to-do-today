@@ -62,16 +62,9 @@ public class AppConstants {
     public static final String DELETE_ALL_DATA = "delete from " + TASKS_TABLE_NAME;
     public static final String QUERY_GET_ITEM = "select * from " + TASKS_TABLE_NAME + " where " + TASKS_COLUMN_ID + "=";
 
-    public static final String TASK_OVERVIEW = "Task Overview";
-    public static final String DELETE_ALL = "Delete All";
-
     public static final String TASK_DELETED = "Task has been deleted successfully";
     public static final String UNDO = "Undo";
     public static final String TASK_COMPLETED = "Task has been marked completed";
-
-    public static final int RESULT_CODE_ADD = 11;
-    public static final int RESULT_CODE_UPDATE = 22;
-    public static final String RESULT_MESSAGE = "Task list updated";
 
     public static final String REDIRECTED_FROM_ADD_NEW_TASK = "addnewtask";
     public static final String TASK_ADDED = "Task has been added successfully";
@@ -86,6 +79,7 @@ public class AppConstants {
     public static final String INTENT_EXTRA_NOTIFICATION_ID = "notification_id";
     public static final String INTENT_EXTRA_TASK_RECURRENCE = "task_recurrence";
     public static final String INTENT_EXTRA_TASK = "task";
+    public static final String INTENT_EXTRA_TASK_BUNDLE = "task_bundle";
     public static final String INTENT_EXTRA_TASK_DESCRIPTION  = "task_description";
     public static final String INTENT_EXTRA_TASK_PRIORITY  = "task_priority";
     public static final String INTENT_EXTRA_TASK_TIME  = "task_time";

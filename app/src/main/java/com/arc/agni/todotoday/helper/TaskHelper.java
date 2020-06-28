@@ -2,14 +2,11 @@ package com.arc.agni.todotoday.helper;
 
 import android.content.Context;
 
-import com.arc.agni.todotoday.activities.HomeScreenActivity;
 import com.arc.agni.todotoday.model.Task;
 import com.arc.agni.todotoday.reminder.ReminderBroadcast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +60,6 @@ public class TaskHelper {
         DBHelper dbHelper = new DBHelper(context);
         Task task = convertJsonToObject(dbHelper.getTask(taskID));
         task.setTaskCompleted(status);
-        task.setCompletedDate(status ? Calendar.getInstance() : null);
         String taskDetail = convertObjectToJson(task);
         new DBHelper(context).updateTask(taskID, taskDetail);
 

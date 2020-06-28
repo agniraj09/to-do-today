@@ -68,7 +68,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     TextView highPriority;
     CheckBox isSetReminderChecked;
     boolean notifyBeforeEnabled;
-    String reminderType= REMINDER_TYPE_NOTIFICATION;
+    String reminderType = REMINDER_TYPE_NOTIFICATION;
     EditText taskTime;
     int taskTimeHour;
     int taskTimeMinute;
@@ -111,7 +111,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.ant_title)).setText(TITLE_UPDATE_TASK);
         }
 
-        // Check/Uncheck listener for 'Set Reminder' checkbox
+        // Check/Uncheck listener for 'More options'(checkbox)
         isSetReminderChecked.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 findViewById(R.id.notification_items).setVisibility(View.VISIBLE);
@@ -121,23 +121,6 @@ public class AddNewTaskActivity extends AppCompatActivity {
             }
         });
 
-/*        taskDescriptionValue.setOnClickListener(v -> {
-
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Need to speak");
-            try {
-                startActivityForResult(intent, 1);
-            } catch (ActivityNotFoundException a) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry your device not supported",
-                        Toast.LENGTH_SHORT).show();
-            }
-
-        });*/
-
         // Initialize MobileAds & Request for ads
         AdView mAdView = findViewById(R.id.ant_adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
@@ -145,26 +128,11 @@ public class AddNewTaskActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1: {
-                if (resultCode == RESULT_OK && null != data) {
-                    ArrayList result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    taskDescriptionValue.getEditText().setText(String.valueOf(result.get(0)));
-                }
-                break;
-            }
-        }
-    }*/
-
     /**
      * Priority Selection Method.
      * When a user selects a priority option,
      * 1. Selected layout will be set to specific priority color and text will be changed to white color.
-     * 2. Other priority layouts will be set to default - Gray background(no_priority) & black text.
+     * 2. Other priority layouts will be set to default - light Gray background(no_priority) & black text.
      * 3. 'priority' value is set.
      */
     public void changePriority(View view) {
@@ -186,7 +154,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
      * NotifyBeforeTime Selection Method.
      * When a user selects a time,
      * 1. Selected time layout will be set to blue background & white text.
-     * 2. Other time layouts will be set to default - Gray background & black text.
+     * 2. Other time layouts will be set to default - light Gray background & black text.
      * 3. 'notifyBeforeMinutes' value is set.
      */
     public void selectNotifyBeforeTime(View view) {
@@ -208,7 +176,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
      * Recurrence Selection Method.
      * When a user selects a specific recurrence type,
      * 1. Selected recurrence layout will be set to blue background & white text.
-     * 2. Other recurrence layouts will be set to default - Gray background & black text.
+     * 2. Other recurrence layouts will be set to default - light Gray background & black text.
      * 3. 'recurrenceType' value is set.
      * 4. If the selected recurrence type is 'None' - which means a one time task, make 'autoDeleteBYEOD' checkbox visible, else make it gone.
      * 5. Reset the 'Reminder option' layout.
@@ -230,6 +198,13 @@ public class AddNewTaskActivity extends AppCompatActivity {
         resetReminderOptionsLayout();
     }
 
+    /**
+     * Reminder Tpe selection Method.
+     * When a user selects a specific reminder type,
+     * 1. Selected reminder type layout will be set to blue background & white text.
+     * 2. Other reminder type layouts will be set to default - light Gray background & black text.
+     * 3. 'reminderType' value is set.
+     */
     public void selectReminderType(View view) {
         for (int id : REMINDER_TYPE_IDS) {
             if (view.getId() == id) {
@@ -245,6 +220,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
         reminderType = REMINDER_TYPE_VALUES.get(REMINDER_TYPE_IDS.indexOf(view.getId()));
     }
 
+    /**
+     * This method is used to set the elevation for layouts programmatically.
+     * Currently 1.Priority, 2. Recurrence Type 3. Notify before 4. Reminder Type layouts make use of this method
+     */
     private void setElevation(boolean set, int viewID) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             findViewById(viewID).setElevation(set ? 5.0F : 0.0F);
@@ -283,6 +262,11 @@ public class AddNewTaskActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+    /**
+     * Validation method for task time. This method does below validations for a task time selected by user.
+     * 1. Task time should not be null.
+     * 2. If recurrence type is 'None', then task time should be greater than current time.
+     */
     private boolean checkIfTaskTimeIsValid(int hour, int minute) {
 
         /*Check 1 - Not null check*/
@@ -307,11 +291,19 @@ public class AddNewTaskActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This method resets the values of taskTimeHour & taskTimeMinute variables to 0.
+     */
     private void resetTaskTimeToZero() {
         taskTimeHour = 0;
         taskTimeMinute = 0;
     }
 
+    /**
+     * Validation method for Notify before minutes. This method does below validations for remind before minutes.
+     * 1. If recurrence type is 'None' &  User opted to set reminder,
+     * Current time should be greater than (TaskTime - notifyBeforeMinutes)
+     */
     private boolean checkIfNotifyBeforeMinuteIsValid(int taskHour, int taskMinute, int notifyMinutes) {
 
         /*Check 1*/
@@ -336,6 +328,11 @@ public class AddNewTaskActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This method makes the  Notify Before layout visible if taskTime has passed all the validations.
+     * 1. This enables & disables the selection for each notify before minutes layout.
+     * 2. Shows / hides the notify before layout.
+     */
     public void showNotifyBeforeTimesIfApplicable(int hour, int minute) {
         if (RECURRENCE_NONE.equalsIgnoreCase(recurrenceType)) {
             Calendar selectedTime = Calendar.getInstance();
@@ -363,6 +360,9 @@ public class AddNewTaskActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method disables the selection for a specific notify before minutes layout if current time is greater than passed Time
+     */
     private void disableSelectionIfDurationIsLessThan(int minutes, Calendar selectedTime) {
         Calendar currentTime = Calendar.getInstance();
         currentTime.add(Calendar.MINUTE, minutes);
@@ -371,6 +371,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is used to pre render the details of a task when a user wants to edit task.
+     * This method retrieves the details of a task using Task ID and renders its details in UI.
+     */
     private void prePopulateDataForTaskUpdate(long taskID) {
         Task task = TaskHelper.getTask(this, taskID);
         taskDescriptionValue.getEditText().setText(task.getDescription());
@@ -399,6 +403,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
         addOrSaveButton.setText(SAVE);
     }
 
+    /**
+     * Validation method for Task description. This method does below validations,
+     * 1.Task description should not be empty
+     */
     public boolean isValidDescription(String description) {
         boolean valid;
         if (null != description && !description.trim().isEmpty()) {
@@ -411,6 +419,9 @@ public class AddNewTaskActivity extends AppCompatActivity {
         return valid;
     }
 
+    /**
+     * This method is used to reset the Task time & Notify before before layouts together whenever user changes the task recurrence choice.
+     */
     public void resetReminderOptionsLayout() {
         // 1. Make error layout invisible/gone
         findViewById(R.id.task_time_error).setVisibility(View.GONE);
@@ -440,6 +451,9 @@ public class AddNewTaskActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is used to show the error message and design the error layout. This is currently used by task time selection alone
+     */
     public void showError(String errorMessage) {
         TextView taskTimeError = findViewById(R.id.task_time_error);
 
@@ -450,7 +464,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
         taskTimeError.setVisibility(View.VISIBLE);
     }
 
-
+    /**
+     * This method is called when a user wants to add a new task or wants to save the edited task. This reads all the values for a task and save/update in DB.
+     * Once the task is saved, it navigates the user back to Home Screen.
+     */
     public void addOrUpdateTaskToDatabase(View view) {
         String description = taskDescriptionValue.getEditText().getText().toString();
         if (isValidDescription(description) && (!isSetReminderChecked.isChecked() || (checkIfTaskTimeIsValid(taskTimeHour, taskTimeMinute)
@@ -468,11 +485,14 @@ public class AddNewTaskActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is called when a user clicks back button.
+     * A popup will be triggered if it is for a task edit.
+     */
     @Override
     public void onBackPressed() {
         if (isItAnUpdateTask) {
             new AlertDialog.Builder(this)
-                    //.setTitle("Discard Edit")
                     .setMessage("Discard changes?")
                     .setNegativeButton("No", null)
                     .setPositiveButton("Yes", (arg0, arg1) -> {

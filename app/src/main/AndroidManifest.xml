@@ -39,6 +39,7 @@
             android:name=".activities.AlarmScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
+            android:excludeFromRecents="true"
             tools:ignore="LockedOrientationActivity" />
 
         <meta-data

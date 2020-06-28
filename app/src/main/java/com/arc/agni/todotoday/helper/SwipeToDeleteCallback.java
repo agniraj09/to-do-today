@@ -101,4 +101,3 @@ abstract public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
         return 0.5f;
     }
 }
-

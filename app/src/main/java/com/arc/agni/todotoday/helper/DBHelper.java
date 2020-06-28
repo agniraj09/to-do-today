@@ -1,15 +1,13 @@
 package com.arc.agni.todotoday.helper;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 import static com.arc.agni.todotoday.constants.AppConstants.DATABASE_NAME;
 import static com.arc.agni.todotoday.constants.AppConstants.DELETE_ALL_DATA;
@@ -51,8 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TASKS_COLUMN_TASK_DETAIL, taskdetail);
-        long taskID = db.insert(TASKS_TABLE_NAME, null, contentValues);
-        return taskID;
+        return db.insert(TASKS_TABLE_NAME, null, contentValues);
     }
 
     String getTask(long id) {
@@ -64,11 +61,6 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return task;
-    }
-
-    public int numberOfRows() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return (int) DatabaseUtils.queryNumEntries(db, TASKS_TABLE_NAME);
     }
 
     void updateTask(long id, String taskdetail) {

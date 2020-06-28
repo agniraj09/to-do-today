@@ -10,12 +10,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.arc.agni.todotoday.R;
-import com.arc.agni.todotoday.service.NotificationMusicService;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import com.arc.agni.todotoday.R;
+import com.arc.agni.todotoday.service.NotificationMusicService;
 
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_DESCRIPTION;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_PRIORITY;
@@ -55,9 +54,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.as_task_description_value)).setText(getIntent().getStringExtra(INTENT_EXTRA_TASK_DESCRIPTION));
         ((TextView) findViewById(R.id.as_task_time)).setText(getIntent().getStringExtra(INTENT_EXTRA_TASK_TIME));
 
-        findViewById(R.id.stop_alarm).setOnClickListener(v -> {
-            stopAlarm();
-        });
+        findViewById(R.id.stop_alarm).setOnClickListener(v -> stopAlarm());
 
         // The below code will disable the alarm after 1 minute if it is not cancelled by user
         new CountDownTimer(60000, 1000) {
@@ -72,6 +69,9 @@ public class AlarmScreenActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * This method stops the alarm.
+     */
     public void stopAlarm() {
         stopService(new Intent(AlarmScreenActivity.this, NotificationMusicService.class));
         finish();

@@ -1,11 +1,12 @@
 package com.arc.agni.todotoday.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.model.Task;
@@ -16,10 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_HIGH;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
@@ -47,6 +44,11 @@ public class ReportScreenActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
+    /** This method is used to populate the below details in Report screen.
+     *  1. Tasks created -> Total, Low P., Medium P., High P.
+     *  2. Tasks Pending -> Total, Low P., Medium P., High P.
+     *  3. Tasks Completed -> Total, Low P., Medium P., High P.
+     *  */
     private void populateReport() {
         List<Task> totalTasks = new ArrayList<>(HomeScreenActivity.taskList);
         List<Task> completedTasks = calculateCompletedTasks(totalTasks);

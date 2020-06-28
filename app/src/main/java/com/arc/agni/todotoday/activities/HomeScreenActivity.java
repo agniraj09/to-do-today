@@ -174,6 +174,9 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is called when a launches the app & has already created tasks. This method is responsible for populatingg the tasks using recyclerview.
+     */
     public void populateTaskList() {
         taskList = TaskHelper.getAllTasksFromDB(this);
         taskList = deleteOlderTasks();
@@ -185,7 +188,9 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
     }
 
-    // Delete tasks which are created with 'Auto delete by EOD'.This checks if today comes after dateCreated.
+    /**
+     * This method deletes tasks which are created with 'Auto delete by EOD'.This checks if today comes after dateCreated.
+     */
     public List<Task> deleteOlderTasks() {
         List<Task> validTasks = new ArrayList<>();
         Calendar today = Calendar.getInstance();
@@ -210,6 +215,9 @@ public class HomeScreenActivity extends AppCompatActivity {
         startActivity(addNewTask);
     }
 
+    /**
+     * This method is responsible for *Deleting a task when a user swipes right to left & *Mark tasks completed when a user swipes left to right.
+     */
     private void enableSwipeToDeleteAndUndo() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
             @Override
@@ -234,42 +242,17 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                     // Mark completed logic
                     currentTask.setTaskCompleted(true);
+                    currentTask.setCompletedDate(Calendar.getInstance());
                     taskAdapter.markTaskCompletionStatus(position, currentTask.getId(), true);
 
                     // Undo mark logic
                     Snackbar snackbar = Snackbar.make(homeScreen, TASK_COMPLETED, Snackbar.LENGTH_LONG).setActionTextColor(Color.YELLOW);
                     snackbar.setAction(UNDO, view -> {
                         currentTask.setTaskCompleted(false);
+                        currentTask.setCompletedDate(null);
                         taskAdapter.markTaskCompletionStatus(position, currentTask.getId(), false);
                     });
                     snackbar.show();
-
-                    // Mark Completed Dialog is currently disabled.
-                    /*AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this)
-                            .setTitle("Mark Completed")
-                            .setMessage("Nice, Have you completed the task?")
-                            .setNegativeButton("No", (arg0, arg1) -> taskAdapter.refreshItem(position))
-                            .setPositiveButton("Yes", (arg0, arg1) -> {
-                                // Mark completed logic
-                                currentTask.setTaskCompleted(true);
-                                taskAdapter.markTaskCompletionStatus(position, currentTask.getId(), true);
-                                Snackbar.make(homeScreen, TASK_COMPLETED, Snackbar.LENGTH_LONG).setActionTextColor(Color.YELLOW).show();
-
-                                // Undo mark logic
-                                Snackbar snackbar = Snackbar.make(homeScreen, TASK_COMPLETED, Snackbar.LENGTH_LONG).setActionTextColor(Color.YELLOW);
-                                snackbar.setAction(UNDO, view -> {
-                                    currentTask.setTaskCompleted(false);
-                                    taskAdapter.markTaskCompletionStatus(position, currentTask.getId(), false);
-                                });
-                                snackbar.show();
-                            });
-
-                    Dialog dialog = builder.create();
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.setOnCancelListener(dialog1 -> {
-                        taskAdapter.refreshItem(position);
-                    });
-                    dialog.show();*/
                 }
             }
         };
@@ -278,14 +261,19 @@ public class HomeScreenActivity extends AppCompatActivity {
         itemTouchhelper.attachToRecyclerView(recyclerView);
     }
 
+    /**
+     * This method navigates user to Reports screen.
+     */
     public void gotoReportsScreen() {
         Intent reportsIntent = new Intent(HomeScreenActivity.this, ReportScreenActivity.class);
         startActivity(reportsIntent);
     }
 
+    /**
+     * This method deletes all the tasks in one shot.
+     */
     public void deleteAllTasks() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreenActivity.this)
-                //.setTitle("Delete All Tasks")
                 .setMessage("Are you sure want to delete all tasks ?")
                 .setNegativeButton("No", null)
                 .setPositiveButton("Yes", (arg0, arg1) -> {
@@ -298,10 +286,16 @@ public class HomeScreenActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * This is used to show Snackbar whenever a user creates or edits a task.
+     */
     public void showSnackBar(String message) {
         Snackbar.make(homeScreen, message, BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
+    /**
+     * This method is used to show the 'chill layout' which will be visible when there is no task created.
+     */
     public void showOrHideChilloutLayout() {
         if (taskList.size() > 0) {
             findViewById(R.id.no_tasks_view).setVisibility(View.GONE);
@@ -310,12 +304,18 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is called when user launched the app first time and viewed all the slides and clicked 'Get Started'. Basically a refresh.
+     */
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
         finish();
         startActivity(getIntent());
     }
 
+    /**
+     * This method is invoked only when the app is launched for the first time. This changes the status bar color to transparent.
+     */
     private void changeStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();

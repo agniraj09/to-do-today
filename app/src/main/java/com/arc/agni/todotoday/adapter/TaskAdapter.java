@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.activities.AddNewTaskActivity;
@@ -23,30 +22,16 @@ import com.arc.agni.todotoday.helper.TaskHelper;
 import com.arc.agni.todotoday.model.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.arc.agni.todotoday.constants.AppConstants.LAST_OCCURRENCE_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.NEXT_OCCURRENCE_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_FULL_DATE;
 import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_SHORT_DATE;
-import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_BACKGROUND;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LABELS;
-import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_LOW;
-import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_MEDIUM;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_VALUES;
-import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_DAILY;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_NONE;
-import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_WEEKLY;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_TIME;
 
@@ -113,14 +98,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         notifyItemChanged(position);
     }
 
-    public void refreshItem(int position) {
-        notifyItemChanged(position);
-    }
-
-    public void refreshAllItems() {
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public TaskAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -161,7 +138,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 holder.permanentDoneIcon.setVisibility(View.GONE);
                 holder.priorityView.setVisibility(View.VISIBLE);
 
-                Drawable priorityLabel = context.getResources().getDrawable(PRIORITY_LABELS.get(PRIORITY_VALUES.indexOf(currentTask.getPriority())));
+                Drawable priorityLabel = context.getResources().getDrawable(PRIORITY_LABELS.get(PRIORITY_VALUES.indexOf(priority)));
                 holder.priorityView.setImageDrawable(priorityLabel);
             }
 
@@ -179,7 +156,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 // 3. Date Created
                 ((TextView) sheetView.findViewById(R.id.bs_date_created)).setText("Date created - " + DateHelper.formatDate(currentTask.getDateCreated(), PATTERN_SHORT_DATE));
                 // 4. Priority
-                ((TextView) sheetView.findViewById(R.id.bs_task_priority)).setText(currentTask.getPriority() + " Priority");
+                ((TextView) sheetView.findViewById(R.id.bs_task_priority)).setText(priority + " Priority");
                 // 5. Status
                 ((TextView) sheetView.findViewById(R.id.bs_task_status)).setText(currentTask.isTaskCompleted() ? "Completed" : "In Progress");
                 // 6. Recurrence
@@ -211,6 +188,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 sheetView.findViewById(R.id.edit_task).setOnClickListener(v1 -> {
                     Intent editIntent = new Intent(context, AddNewTaskActivity.class);
                     editIntent.putExtra(TASK_ID, currentTask.getId());
+                    if (mBottomSheetDialog.isShowing()) {
+                        mBottomSheetDialog.dismiss();
+                    }
                     context.startActivity(editIntent);
                 });
             });
