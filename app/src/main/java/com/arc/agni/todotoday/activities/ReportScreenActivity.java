@@ -39,8 +39,8 @@ public class ReportScreenActivity extends AppCompatActivity {
 
         // Initialize MobileAds & Request for ads
         AdView mAdView = findViewById(R.id.rs_adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
-        //AdRequest adRequest = new AdRequest.Builder().build();
+        //AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 

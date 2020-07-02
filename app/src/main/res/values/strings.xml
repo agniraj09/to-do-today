@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">To Do Today</string>
+    <string name="app_name">To Do</string>
 
     <string name="title">To Do List Today</string>
     <string name="task_overview">Task Overview</string>
@@ -68,7 +68,7 @@
     <string name="title4_text"><![CDATA[Tap on a task to view the details & edit them]]>.</string>
 
     <!--Original ID-->
-    <!--<string name="banner_ad_unit_id">ca-app-pub-4587610802196055/6294540600</string>-->
+    <string name="banner_ad_unit_id">ca-app-pub-4587610802196055/6294540600</string>
     <!--Test ID-->
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
 </resources>
