@@ -17,7 +17,9 @@ import android.os.Bundle;
 import androidx.core.app.NotificationCompat;
 
 import com.arc.agni.todotoday.R;
+import com.arc.agni.todotoday.activities.AlarmScreenActivity;
 import com.arc.agni.todotoday.activities.HomeScreenActivity;
+import com.arc.agni.todotoday.helper.DateHelper;
 import com.arc.agni.todotoday.model.Task;
 import com.arc.agni.todotoday.service.NotificationMusicService;
 
@@ -30,6 +32,10 @@ import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFIC
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFICATION_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_BUNDLE;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_DESCRIPTION;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_PRIORITY;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_TIME;
+import static com.arc.agni.todotoday.constants.AppConstants.PATTERN_TIME;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_COLORS;
 import static com.arc.agni.todotoday.constants.AppConstants.PRIORITY_VALUES;
 import static com.arc.agni.todotoday.constants.AppConstants.RECURRENCE_DAILY;
@@ -51,6 +57,8 @@ public class ReminderBroadcast extends BroadcastReceiver {
         // Start alarm music for on booking day(actual) notifications
         if (REMINDER_TYPE_ALARM.equalsIgnoreCase(task.getReminderType())) {
             Intent alarmScreenIntent = new Intent(context, NotificationMusicService.class);
+            alarmScreenIntent.putExtra(INTENT_EXTRA_NOTIFICATION, notification);
+            alarmScreenIntent.putExtra(INTENT_EXTRA_NOTIFICATION_ID, notification);
             alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_BUNDLE, bundle);
             context.startService(alarmScreenIntent);
         } else {
@@ -172,11 +180,35 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 //.setContentText(RECURRENCE_NOTIFICATION_TEXT.get(RECURRENCE_VALUES.indexOf(task.getRecurrence())))
                 .setContentText(task.getDescription())
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(task.getDescription()))
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setContentIntent(homeScreenPendingIntent);
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && REMINDER_TYPE_ALARM.equalsIgnoreCase(task.getReminderType())) {
+            Intent alarmScreenIntent = new Intent(context, AlarmScreenActivity.class);
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_DESCRIPTION, task.getDescription());
+            Calendar taskTime = Calendar.getInstance();
+            taskTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
+            taskTime.set(Calendar.MINUTE, task.getReminderMinute());
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_PRIORITY, task.getPriority());
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_TIME, DateHelper.formatDate(taskTime, PATTERN_TIME));
+            alarmScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(),
+                    alarmScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent cancelIntent = new Intent(context, ActionBroadcast.class);
+            PendingIntent cancelPendingIntent = PendingIntent.getBroadcast(context, (int) System.currentTimeMillis(),
+                    cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder.setContentIntent(fullScreenPendingIntent).
+                    setFullScreenIntent(fullScreenPendingIntent, true).
+                    setDeleteIntent(cancelPendingIntent);
+        } else {
+            builder.setContentIntent(homeScreenPendingIntent);
+        }
+
         return builder.build();
     }
 
@@ -191,4 +223,3 @@ public class ReminderBroadcast extends BroadcastReceiver {
     }
 
 }
-

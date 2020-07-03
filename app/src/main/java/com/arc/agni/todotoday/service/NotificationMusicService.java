@@ -1,6 +1,9 @@
 package com.arc.agni.todotoday.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -18,6 +21,8 @@ import com.arc.agni.todotoday.model.Task;
 import java.io.IOException;
 import java.util.Calendar;
 
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFICATION;
+import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_NOTIFICATION_ID;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_BUNDLE;
 import static com.arc.agni.todotoday.constants.AppConstants.INTENT_EXTRA_TASK_DESCRIPTION;
@@ -73,18 +78,26 @@ public class NotificationMusicService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         player.start();
 
-        Intent alarmScreenIntent = new Intent(this, AlarmScreenActivity.class);
-        Bundle bundle = intent.getBundleExtra(INTENT_EXTRA_TASK_BUNDLE);
-        Task task = bundle.getParcelable(INTENT_EXTRA_TASK);
-        alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_DESCRIPTION, task.getDescription());
-        Calendar taskTime = Calendar.getInstance();
-        taskTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
-        taskTime.set(Calendar.MINUTE, task.getReminderMinute());
-        alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_PRIORITY, task.getPriority());
-        alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_TIME, DateHelper.formatDate(taskTime, PATTERN_TIME));
-        alarmScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(alarmScreenIntent);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notification = intent.getParcelableExtra(INTENT_EXTRA_NOTIFICATION);
+            int notificationID = intent.getIntExtra(INTENT_EXTRA_NOTIFICATION_ID, 0);
+            notificationManager.notify(notificationID, notification);
+            startForeground(notificationID, notification);
+            // notificationManager.notify(notificationID, notification);
+        } else {
+            Intent alarmScreenIntent = new Intent(this, AlarmScreenActivity.class);
+            Bundle bundle = intent.getBundleExtra(INTENT_EXTRA_TASK_BUNDLE);
+            Task task = bundle.getParcelable(INTENT_EXTRA_TASK);
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_DESCRIPTION, task.getDescription());
+            Calendar taskTime = Calendar.getInstance();
+            taskTime.set(Calendar.HOUR_OF_DAY, task.getReminderHour());
+            taskTime.set(Calendar.MINUTE, task.getReminderMinute());
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_PRIORITY, task.getPriority());
+            alarmScreenIntent.putExtra(INTENT_EXTRA_TASK_TIME, DateHelper.formatDate(taskTime, PATTERN_TIME));
+            alarmScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(alarmScreenIntent);
+        }
         return START_NOT_STICKY; // Service will be killed if app is killed
     }
 

@@ -37,9 +37,9 @@
         </activity>
         <activity
             android:name=".activities.AlarmScreenActivity"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:excludeFromRecents="true"
             tools:ignore="LockedOrientationActivity" />
 
         <meta-data
@@ -47,11 +47,14 @@
             android:value="ca-app-pub-4587610802196055~5991767207" />
 
         <receiver android:name=".reminder.ReminderBroadcast" />
+        <receiver android:name=".reminder.ActionBroadcast" />
+
         <service
             android:name=".service.NotificationMusicService"
             android:enabled="true" />
     </application>
 
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 </manifest>
