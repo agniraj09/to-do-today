@@ -8,7 +8,7 @@ import java.util.List;
 public class AppConstants {
 
     // Screen Titles
-    public static final String TITLE_TO_DO_LIST_TODAY = "To Do List Today";
+    public static final String TITLE_TO_DO_LIST_TODAY = "To Do List";
     public static final String TITLE_UPDATE_TASK = "Update Task";
 
     public static final String RECURRENCE_NONE = "none";

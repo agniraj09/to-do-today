@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arc.agni.todotoday.R;
 import com.arc.agni.todotoday.adapter.SliderPagerAdapter;
@@ -46,6 +49,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 import static com.arc.agni.todotoday.constants.AppConstants.REDIRECTED_FROM_ADD_NEW_TASK;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_COMPLETED;
 import static com.arc.agni.todotoday.constants.AppConstants.TASK_DELETED;
@@ -168,8 +172,8 @@ public class HomeScreenActivity extends AppCompatActivity {
 
             // Initialize MobileAds & Request for ads
             AdView mAdView = findViewById(R.id.hs_adView);
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
-            // AdRequest adRequest = new AdRequest.Builder().build();
+            //AdRequest adRequest = new AdRequest.Builder().addTestDevice(TEST_DEVICE_ID).build();
+            AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         }
     }
@@ -334,9 +338,35 @@ public class HomeScreenActivity extends AppCompatActivity {
             case R.id.delete_all:
                 deleteAllTasks();
                 break;
+
+            case R.id.help:
+                showBatteryOptimizationTip();
+                break;
         }
         return true;
     }
+
+    private void showBatteryOptimizationTip() {
+        final Dialog dialog = new Dialog(HomeScreenActivity.this);
+        dialog.setContentView(R.layout.help_dialog);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ((TextView) dialog.findViewById(R.id.battery_opt_tip)).setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            dialog.findViewById(R.id.go_to_bat_opt).setOnClickListener(v -> {
+                Intent myIntent = new Intent();
+                myIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                startActivity(myIntent);
+            });
+
+        } else {
+            dialog.findViewById(R.id.go_to_bat_opt).setVisibility(View.GONE);
+        }
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

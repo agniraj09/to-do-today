@@ -4,6 +4,7 @@
     <string name="title">To Do List Today</string>
     <string name="task_overview">Task Overview</string>
     <string name="delete_all">Delete All</string>
+    <string name="help">Help</string>
     <string name="no_task_message">Chill out,\nYou have no tasks to work upon!</string>
 
     <string name="task_description">Task Description</string>
@@ -61,14 +62,25 @@
     <string name="title2">Priority</string>
     <string name="title3">Swipe Gestures</string>
     <string name="title4"><![CDATA[View & Edit]]></string>
+    <string name="title5">Battery Optimization</string>
 
     <string name="title1_text">Add your task in single tap and \ncustomize it with powerful options</string>
     <string name="title2_text">Different labels available for different priority tasks</string>
     <string name="title3_text"><![CDATA[Swipe right to mark a task \'Completed\' \n& Swipe left to delete a task]]></string>
     <string name="title4_text"><![CDATA[Tap on a task to view the details & edit them]]>.</string>
+    <string name="title5_text">In some devices, battery optimization needs to be disabled. Check Help Section for more info.</string>
+
+    <string name="bat_opt_title">Battery Optimization Tip</string>
+    <string name="battery_optimization_tip"><![CDATA[\t If you do not get reminders when the application is not running,
+    chances are that, your device uses custom operating system and it prevents the application running in background.
+     You need to disable the battery optimization for this application.\n
+     \n\t\t 1. Go To Optimization Settings
+     \n\t\t 2. Select \'To Do\' App
+     \n\t\t 3. Choose \'Don\'t Optimize\']]></string>
+    <string name="go_to_battery_opt">Go To Battery Optimization Settings</string>
 
     <!--Original ID-->
-    <!--<string name="banner_ad_unit_id">ca-app-pub-4587610802196055/6294540600</string>-->
+    <!-- <string name="banner_ad_unit_id">ca-app-pub-4587610802196055/6294540600</string>-->
     <!--Test ID-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-</resources>
+ </resources>

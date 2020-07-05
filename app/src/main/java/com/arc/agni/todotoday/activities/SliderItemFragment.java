@@ -22,26 +22,26 @@ public class SliderItemFragment extends Fragment {
     // prepare all title ids arrays
     @StringRes
     private static final int[] PAGE_TITLES =
-            new int[]{R.string.title1, R.string.title2, R.string.title3, R.string.title4};
+            new int[]{R.string.title1, R.string.title2, R.string.title3, R.string.title4, R.string.title5};
 
     // prepare all subtitle ids arrays
     @StringRes
     private static final int[] PAGE_TEXT =
             new int[]{
-                    R.string.title1_text, R.string.title2_text, R.string.title3_text, R.string.title4_text
+                    R.string.title1_text, R.string.title2_text, R.string.title3_text, R.string.title4_text, R.string.title5_text
             };
 
     // prepare all subtitle images arrays
     @StringRes
     private static final int[] PAGE_IMAGE =
             new int[]{
-                    R.drawable.ic_slide1, R.drawable.ic_slide2, R.drawable.ic_slide3, R.drawable.ic_slide4
+                    R.drawable.ic_slide1, R.drawable.ic_slide2, R.drawable.ic_slide3, R.drawable.ic_slide4, R.drawable.ic_slide5
             };
 
     // prepare all background images arrays
     @StringRes
     private static final int[] BG_IMAGE = new int[]{
-            R.color.low, R.color.medium, R.color.high, R.color.green
+            R.color.low, R.color.medium, R.color.high,R.color.label_color, R.color.green
     };
     private int position;
 
