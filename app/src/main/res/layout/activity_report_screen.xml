@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pure_white"
+    tools:context=".activities.ReportScreenActivity">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        app:cardElevation="0dp"
+        app:cardPreventCornerOverlap="true"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_5_percent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/ant_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:padding="10dp"
+            android:text="@string/task_overview"
+            android:fontFamily="@font/sansita"
+            android:textAlignment="center"
+            android:textColor="@color/primary_text"
+            android:textSize="23sp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tasks_pending_cardview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/rs_adView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tasks_completed_cardview">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tasks_pending_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/green"
+                android:fontFamily="sans-serif"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/tasks_pending"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/card3_hoizontal_guide_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tasks_pending_total"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/yellowish"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/red"
+                android:textSize="70sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/card3_vertical_guideline_66"
+                app:layout_constraintTop_toTopOf="@+id/card3_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_pending_low_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/low"
+                android:gravity="center"
+                android:text="@string/low"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card3_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/card3_vertical_guideline_22"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/card3_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_pending_low_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/low"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/card3_vertical_guideline_22"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tasks_pending_low_title" />
+
+            <TextView
+                android:id="@+id/tasks_pending_medium_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/medium"
+                android:gravity="center"
+                android:text="@string/medium"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card3_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/card3_vertical_guideline_44"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/card3_vertical_guideline_22"
+                app:layout_constraintTop_toTopOf="@+id/card3_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_pending_high_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/high"
+                android:gravity="center"
+                android:text="@string/high"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card3_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/card3_vertical_guideline_66"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/card3_vertical_guideline_44"
+                app:layout_constraintTop_toTopOf="@+id/card3_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_pending_medium_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/medium"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/card3_vertical_guideline_44"
+                app:layout_constraintStart_toStartOf="@+id/card3_vertical_guideline_22"
+                app:layout_constraintTop_toBottomOf="@+id/tasks_pending_medium_title" />
+
+            <TextView
+                android:id="@+id/tasks_pending_high_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/high"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/card3_vertical_guideline_66"
+                app:layout_constraintStart_toStartOf="@+id/card3_vertical_guideline_44"
+                app:layout_constraintTop_toTopOf="@+id/card3_hoizontal_guide_2" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card3_vertical_guideline_22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.22" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card3_vertical_guideline_44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.44" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card3_vertical_guideline_66"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.66" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card3_hoizontal_guide_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.30" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card3_hoizontal_guide_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.50" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tasks_created_cardview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/tasks_completed_cardview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tasks_created_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/green"
+                android:fontFamily="sans-serif"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/total_tasks"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/card_hoizontal_guide_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tasks_created_total"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/yellowish"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/red"
+                android:textSize="70sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/vertical_guideline_66"
+                app:layout_constraintTop_toTopOf="@+id/card_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_created_low_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/low"
+                android:gravity="center"
+                android:text="@string/low"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_22"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/card_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_created_low_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/low"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_22"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tasks_created_low_title" />
+
+            <TextView
+                android:id="@+id/tasks_created_medium_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/medium"
+                android:gravity="center"
+                android:text="@string/medium"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_44"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/vertical_guideline_22"
+                app:layout_constraintTop_toTopOf="@+id/card_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_created_high_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/high"
+                android:gravity="center"
+                android:text="@string/high"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_66"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/vertical_guideline_44"
+                app:layout_constraintTop_toTopOf="@+id/card_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_created_medium_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/medium"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_44"
+                app:layout_constraintStart_toStartOf="@+id/vertical_guideline_22"
+                app:layout_constraintTop_toBottomOf="@+id/tasks_created_medium_title" />
+
+            <TextView
+                android:id="@+id/tasks_created_high_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/high"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_66"
+                app:layout_constraintStart_toStartOf="@+id/vertical_guideline_44"
+                app:layout_constraintTop_toTopOf="@+id/card_hoizontal_guide_2" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/vertical_guideline_22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.22" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/vertical_guideline_44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.44" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/vertical_guideline_66"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.66" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card_hoizontal_guide_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.30" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card_hoizontal_guide_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.50" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tasks_completed_cardview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/tasks_pending_cardview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tasks_created_cardview">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tasks_completed_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/green"
+                android:fontFamily="sans-serif"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/tasks_completed"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/card2_hoizontal_guide_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tasks_completed_total"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/yellowish"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/red"
+                android:textSize="70sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/card2_vertical_guideline_66"
+                app:layout_constraintTop_toTopOf="@+id/card2_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_completed_low_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/low"
+                android:gravity="center"
+                android:text="@string/low"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card2_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/card2_vertical_guideline_22"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/card2_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_completed_low_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/low"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/card2_vertical_guideline_22"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tasks_completed_low_title" />
+
+            <TextView
+                android:id="@+id/tasks_completed_medium_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/medium"
+                android:gravity="center"
+                android:text="@string/medium"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card2_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/card2_vertical_guideline_44"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/card2_vertical_guideline_22"
+                app:layout_constraintTop_toTopOf="@+id/card2_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_completed_high_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/high"
+                android:gravity="center"
+                android:text="@string/high"
+                android:textAlignment="center"
+                android:textColor="@color/pure_white"
+                app:layout_constraintBottom_toTopOf="@+id/card2_hoizontal_guide_2"
+                app:layout_constraintEnd_toStartOf="@+id/card2_vertical_guideline_66"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/card2_vertical_guideline_44"
+                app:layout_constraintTop_toTopOf="@+id/card2_hoizontal_guide_1" />
+
+            <TextView
+                android:id="@+id/tasks_completed_medium_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/medium"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/card2_vertical_guideline_44"
+                app:layout_constraintStart_toStartOf="@+id/card2_vertical_guideline_22"
+                app:layout_constraintTop_toBottomOf="@+id/tasks_completed_medium_title" />
+
+            <TextView
+                android:id="@+id/tasks_completed_high_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/high"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/count"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/pure_white"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/card2_vertical_guideline_66"
+                app:layout_constraintStart_toStartOf="@+id/card2_vertical_guideline_44"
+                app:layout_constraintTop_toTopOf="@+id/card2_hoizontal_guide_2" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card2_vertical_guideline_22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.22" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card2_vertical_guideline_44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.44" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card2_vertical_guideline_66"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.66" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card2_hoizontal_guide_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.30" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card2_hoizontal_guide_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.50" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_32_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.34" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_59_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.585736" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_5_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.10925645" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_83_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.82852805" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/rs_adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        app:adSize="SMART_BANNER"
+        app:adUnitId="@string/banner_ad_unit_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tasks_pending_cardview" />
+</androidx.constraintlayout.widget.ConstraintLayout>

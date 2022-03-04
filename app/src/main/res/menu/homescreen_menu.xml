@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tasks_overview"
+        android:title="@string/task_overview" />
+
+    <item
+        android:id="@+id/delete_all"
+        android:title="@string/delete_all" />
+
+    <item
+        android:id="@+id/help"
+        android:title="@string/help" />
+
+</menu>
